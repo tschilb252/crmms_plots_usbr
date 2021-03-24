@@ -5,7 +5,7 @@ Created on Wed Aug 26 13:28:52 2020
 @author: buriona
 """
 
-import os, stat
+import os
 import json
 import subprocess
 from subprocess import PIPE
@@ -56,9 +56,7 @@ if __name__ == '__main__':
         sys.exit(1)
     if not os.name == 'nt':
         print(f'Changing permissions of {args.bat}')
-        os.chmod(args.bat, stat.S_IRWXU)
-        os.chmod(args.bat, stat.S_IRWXG)
-        os.chmod(args.bat, stat.S_IROTH)
+        os.chmod(args.bat, 0o774)
         
     if not args.output == 'local':
         if not path.isdir(args.output):
