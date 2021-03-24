@@ -8,6 +8,7 @@ Created on Wed Aug 26 13:28:52 2020
 import os
 import json
 import subprocess
+from subprocess import PIPE
 from os import path
 
 THIS_DIR = path.dirname(path.realpath(__file__))
@@ -61,8 +62,10 @@ if __name__ == '__main__':
         run_args = [args.bat, args.env, config_name, args.output]
         result = subprocess.run(
             run_args, 
-            capture_output=True, 
-            text=True
+            stdout=PIPE, 
+            stderr=PIPE,
+            # capture_output=True, 
+            # text=True
         )
         results_summary.append(
             (config_name, 'Failed!' if result.returncode else 'Success!')
