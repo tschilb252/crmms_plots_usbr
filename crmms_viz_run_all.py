@@ -27,11 +27,21 @@ if __name__ == '__main__':
     
     cli_desc = 'Creates visualization suite for all CRMM results in config file'
     parser = argparse.ArgumentParser(description=cli_desc)
-    parser.add_argument("-V", "--version", help="show program version", action="store_true")
-    parser.add_argument("-e", "--env", help="path to conda venv to be used", default=VENV_LOC)
-    parser.add_argument("-c", "--config", help="path to config file to be used", default=CONFIG_FILEPATH)
-    parser.add_argument("-b", "--bat", help="path to crmms_viz_gen.bat", default=BAT_FILEPATH)
-    parser.add_argument("-o", "--output", help="override default output folder", default='local')
+    parser.add_argument(
+        "-V", "--version", help="show program version", action="store_true"
+    )
+    parser.add_argument(
+        "-e", "--env", help="path to conda venv to be used", default=VENV_LOC
+    )
+    parser.add_argument(
+        "-c", "--config", help="path to config file to be used", default=CONFIG_FILEPATH
+    )
+    parser.add_argument(
+        "-b", "--bat", help="path to crmms_viz_gen.bat", default=BAT_FILEPATH
+    )
+    parser.add_argument(
+        "-o", "--output", help="override default output folder", default='local'
+    )
     args = parser.parse_args()
     
     if args.version:
@@ -46,7 +56,7 @@ if __name__ == '__main__':
     if not args.output == 'local':
         if not path.isdir(args.output):
             print(f'Output dir "{args.output}" does not exist, try again.')
-        sys.exit(1)
+            sys.exit(1)
         
     print(
         'Refreshing all CRMM viz suites using config file found here: '
