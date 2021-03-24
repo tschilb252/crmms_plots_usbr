@@ -5,11 +5,12 @@ Created on Wed Aug 26 13:28:52 2020
 @author: buriona
 """
 
-import os
+import os, stat
 import json
 import subprocess
 from subprocess import PIPE
 from os import path
+
 
 THIS_DIR = path.dirname(path.realpath(__file__))
 CONFIG_FILENAME = 'crmms_viz.config'
@@ -53,6 +54,11 @@ if __name__ == '__main__':
     if not path.isfile(args.bat):
         print(f'Bat file "{args.bat}" does not exist, try again.')
         sys.exit(1)
+    elif not os.name == 'nt':
+        os.chmod(args.bat, stat.S_IRWXU)
+        os.chmod(args.bat, stat.S_IRWXG)
+        os.chmod(args.bat, stat.S_IROTH)
+        
     if not args.output == 'local':
         if not path.isdir(args.output):
             print(f'Output dir "{args.output}" does not exist, try again.')
@@ -75,8 +81,6 @@ if __name__ == '__main__':
             stdout=PIPE, 
             stderr=PIPE,
             encoding='utf-8'
-            # capture_output=True, 
-            # text=True
         )
         results_summary.append(
             (config_name, 'Failed!' if result.returncode else 'Success!')
