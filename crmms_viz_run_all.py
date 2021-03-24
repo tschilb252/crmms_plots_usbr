@@ -64,12 +64,12 @@ if __name__ == '__main__':
     )
     with open(args.config, 'r') as configs:
         all_configs = json.load(configs)
-    config_names = list(all_configs.keys())
+    config_names = list(set(all_configs.keys()))
     print(f' Found {len(config_names)} publication months...\n')
     results_summary = []
     for config_name in config_names:
         print(f'    Working on {config_name}...')
-        run_args = [args.bat, args.env, config_name, args.output]
+        run_args = [args.bat, args.env, config_name, args.output, args.config]
         result = subprocess.run(
             run_args, 
             stdout=PIPE, 

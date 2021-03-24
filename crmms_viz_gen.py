@@ -235,9 +235,11 @@ def parse_model_ids(model_arg):
         sys.exit(1)
     return models
 
-def get_config(config_name):
-    model_config_path = Path('crmms_viz.config').resolve()
-    with model_config_path.open('r') as pub_config:
+def get_config(config_name, config_path=Path('crmms_viz.config').resolve()):
+    if not config_path.isfile():
+        print(f'"{config_path}" is not a valid filepath, try again.')
+        sys.exit(1)
+    with config_path.open('r') as pub_config:
         all_configs = json.load(pub_config)
     config = all_configs.get(config_name, None)
     if config:
@@ -251,7 +253,7 @@ def get_config(config_name):
             DEFAULT_DATA_PATH
         )
     else:
-        print(f'"{args.config}" not found in {model_config_path}, try again.')
+        print(f'"{args.config}" not found in {config_path}, try again.')
         sys.exit(1)
     return {"name": pub_name, "mrids": models, "data": data_filename}
 
@@ -302,14 +304,38 @@ if __name__ == '__main__':
     
     cli_desc = 'Creates visualization suite for CRMMS results'
     parser = argparse.ArgumentParser(description=cli_desc)
-    parser.add_argument("-V", "--version", help="show program version", action="store_true")
-    parser.add_argument("-P", "--provisional", help="watermarks charts with provisional disclaimer", action="store_true")
+    parser.add_argument(
+        "-V", "--version", help="show program version", action="store_true"
+    )
+    parser.add_argument(
+        "-P", "--provisional", 
+        help="watermarks charts with provisional disclaimer", 
+        action="store_true"
+    )
     # parser.add_argument("-r", "--rise", help="create RISE jsons, push only if sftp_push set to true or valid path in config", action="store_true")
-    parser.add_argument("-o", "--output", help="override default output folder", default='local')
-    parser.add_argument("-c", "--config", help='key to be used in crmms_viz.config, overrides --name, --models, and --data')
-    parser.add_argument("-n", "--name", help='override the default current date based folder name should take form m_YYYY, i.e. 7_2020')
-    parser.add_argument("-m", "--models", help='override models.config, use form: MAX, MOST, MIN. If only one provided it is assumed to be most.')
-    parser.add_argument("-d", "--data", help=f'override default data path ({DEFAULT_DATA_PATH})')
+    parser.add_argument(
+        "-o", "--output", help="override default output folder", default='local'
+    )
+    parser.add_argument(
+        "-f", "--file", 
+        help='path to crmms_viz.config, used to overide deafault local one',
+        default=Path(this_dir, 'crmms_viz.config')
+    )
+    parser.add_argument(
+        "-c", "--config", 
+        help='key to be used in crmms_viz.config, overrides --name, --models, and --data'
+    )
+    parser.add_argument(
+        "-n", "--name", 
+        help='override the default current date based folder name should take form m_YYYY, i.e. 7_2020'
+    )
+    parser.add_argument(
+        "-m", "--models", 
+        help='override models.config, use form: MAX, MOST, MIN. If only one provided it is assumed to be most.'
+    )
+    parser.add_argument(
+        "-d", "--data", help=f'override default data path ({DEFAULT_DATA_PATH})'
+    )
     args = parser.parse_args()
     
     if args.version:
@@ -320,7 +346,7 @@ if __name__ == '__main__':
         watermark = True
     
     if args.config:
-        config_dict = get_config(args.config)
+        config_dict = get_config(args.config, args.file)
         args.name = config_dict['name']
         args.models = config_dict['mrids']
         args.data = config_dict['data']

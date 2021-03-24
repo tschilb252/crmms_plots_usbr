@@ -15,4 +15,6 @@ readonly pyFile="./crmms_viz_gen.py"
 
 echo "Starting CRMMS plots generation..."
 
-python ${pyFile} --config $2 --output $3 -P
+python ${pyFile} --config $2 --output $3 --file $4 -P
+
+echo "Process Complete!"

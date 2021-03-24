@@ -335,7 +335,7 @@ def create_nav(data_dir, nav_filename=None):
     }
     write_file(write_nav_dict)
 
-    return '\nNavigation files created.'
+    return '  Navigation files created.'
 
 if __name__ == '__main__':
     this_dir = os.path.dirname(os.path.realpath(__file__))

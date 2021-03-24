@@ -133,9 +133,9 @@ def create_map(site_type, meta, data_dir):
         with open(path.join(sitetype_dir, 'index.html'), 'w') as index_pg:
             index_pg.write(chart_file_str)
             
-        return f'Created map for {site_type}'
+        return f'  Created map for {site_type}'
     else:
-        return 'Failed to create map for {site_type}, no sites with coordinates'
+        return '  Failed to create map for {site_type}, no sites with coordinates'
 
 if __name__ == '__main__':
     this_dir = path.dirname(path.realpath(__file__))
