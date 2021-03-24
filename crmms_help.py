@@ -4,12 +4,13 @@ Created on Thu Aug 27 07:13:01 2020
 
 @author: buriona
 """
-
+import pathlib
 from os import path
 from shutil import copy
 from crmms_utils import get_html_head, get_js_refs
 
 def create_help_page(help_path):
+    help_path.replace('/', pathlib.os.sep)
     html_str = (f'''
         {get_html_head()}
           <body>

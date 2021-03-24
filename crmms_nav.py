@@ -9,6 +9,7 @@ import os
 from calendar import month_name
 from functools import reduce
 from datetime import datetime as dt
+import pathlib
 from pathlib import Path
 import pandas as pd
 from crmms_dash import create_dash
@@ -253,7 +254,7 @@ def create_nav(data_dir, nav_filename=None):
     nl = '\n'
     if not nav_filename:
         nav_filename = 'crmms_nav.html'
-
+    data_dir = data_dir.replace('/', pathlib.os.sep)
     basepath = os.path.basename(os.path.normpath(data_dir))
     walk_dict = get_folders(data_dir)[basepath]
     to_remove = ['.git', 'pau_www.usbr.gov_uc_water_crmms.csv', 'flat_files', 'assets']

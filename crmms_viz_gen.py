@@ -171,14 +171,14 @@ def make_json(df, json_filename, logger):
         print_and_log(json_err, logger)
 
 def make_nav(data_dir, logger=None):
-    try:
+    # try:
         nav_str = create_nav(data_dir)
         print_and_log(nav_str, logger)
-    except Exception as err:
-        nav_err = (
-            f'Error creating ff_nav.html file for {data_dir} - {err}'
-        )
-        print_and_log(nav_err, logger)
+    # except Exception as err:
+    #     nav_err = (
+    #         f'Error creating ff_nav.html file for {data_dir} - {err}'
+    #     )
+    #     print_and_log(nav_err, logger)
 
 def make_sitemap(site_type, df_meta, data_dir, logger=None):
     try:
