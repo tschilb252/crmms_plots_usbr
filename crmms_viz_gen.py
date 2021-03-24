@@ -236,10 +236,10 @@ def parse_model_ids(model_arg):
     return models
 
 def get_config(config_name, config_path=None):
-    if not config_path.is_file():
+    if not path.isfile(config_path):
         print(f'"{config_path}" is not a valid filepath, try again.')
         sys.exit(1)
-    with config_path.open('r') as pub_config:
+    with Path(config_path).open('r') as pub_config:
         all_configs = json.load(pub_config)
     config = all_configs.get(config_name, None)
     if config:

@@ -104,6 +104,6 @@ if __name__ == '__main__':
                 print(f'      Success!\n{std_out}')
             else:
                 print('      Success!')
-            
+
     results_str = '\n'.join([f'{i[0]}: {i[1]}' for i in results_summary])
     print(f'Summary:\n\n{results_str}')

@@ -6,6 +6,6 @@ call activate %root%
 echo hdb_env Activated!
 call cd %~dp0
 echo Starting CRMMS plots generation...
-python crmms_viz_gen.py --config %2 --output %3 --config_path %4 --provisional
+python crmms_viz_gen.py --config %2 --output %3 --config_path %4 --provisional 2>run_all.err
 echo Process Complete!
 exit %errorlevel%
