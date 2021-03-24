@@ -32,6 +32,9 @@ if __name__ == '__main__':
         "-V", "--version", help="show program version", action="store_true"
     )
     parser.add_argument(
+        "-v", "--verbose", help="show stout from each run", action="store_true"
+    )
+    parser.add_argument(
         "-e", "--env", help="path to conda venv to be used", default=VENV_LOC
     )
     parser.add_argument(
@@ -71,13 +74,14 @@ if __name__ == '__main__':
         all_configs = json.load(configs)
     config_names = list(set(all_configs.keys()))
     print(f' Found {len(config_names)} publication months...\n')
+    print(f' Creating files here: {args.output}')
     results_summary = []
     for config_name in config_names:
         print(f'    Working on {config_name}...')
         run_args = [args.bat, args.env, config_name, args.output, args.config]
         result = subprocess.run(
             run_args, 
-            stdout=PIPE, 
+            stdout=PIPE,
             stderr=PIPE,
             encoding='utf-8'
         )
@@ -89,7 +93,12 @@ if __name__ == '__main__':
             err_out = '\n'.join([f'        {i}' for i in err_out])
             print(f'      Failed!\n{err_out}\n      Continuing...')
         else:
-            print('      Success!')
+            if args.verbose:
+                std_out = result.stdout.split('\n')
+                std_out = '\n'.join([f'        {i}' for i in std_out])
+                print(f'      Success!\n{std_out}\n')
+            else:
+                print('      Success!')
             
     results_str = '\n'.join([f'{i[0]}: {i[1]}' for i in results_summary])
     print(f'Summary:\n\n{results_str}')
