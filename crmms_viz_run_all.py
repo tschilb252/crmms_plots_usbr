@@ -64,6 +64,7 @@ if __name__ == '__main__':
             run_args, 
             stdout=PIPE, 
             stderr=PIPE,
+            encoding='utf-8'
             # capture_output=True, 
             # text=True
         )

@@ -517,5 +517,5 @@ if __name__ == '__main__':
     print('Making site map...')
     make_sitemap(curr_month_str, df_meta, crmms_viz_dir, logger)
     print('Making nav...')
-    make_nav(crmms_viz_dir.replace('/', '\\'), logger)
-    create_help_page(crmms_viz_dir.replace('/', '\\'))
+    make_nav(crmms_viz_dir, logger)
+    create_help_page(crmms_viz_dir)
