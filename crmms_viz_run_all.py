@@ -54,7 +54,8 @@ if __name__ == '__main__':
     if not path.isfile(args.bat):
         print(f'Bat file "{args.bat}" does not exist, try again.')
         sys.exit(1)
-    elif not os.name == 'nt':
+    if not os.name == 'nt':
+        print(f'Changing permissions of {args.bat}')
         os.chmod(args.bat, stat.S_IRWXU)
         os.chmod(args.bat, stat.S_IRWXG)
         os.chmod(args.bat, stat.S_IROTH)
