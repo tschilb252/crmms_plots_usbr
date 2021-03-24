@@ -20,6 +20,7 @@ if os.name == 'nt':
 else:
     BAT_FILEPATH = path.join(THIS_DIR, 'crmms_viz_gen.sh')
 VENV_LOC = path.join(path.dirname(THIS_DIR), 'crmm_py')
+DEFAULT_OUTPUT_PATH = path.join(THIS_DIR, 'crmms_viz')
 
 if __name__ == '__main__':
     
@@ -38,20 +39,22 @@ if __name__ == '__main__':
         "-e", "--env", help="path to conda venv to be used", default=VENV_LOC
     )
     parser.add_argument(
-        "-c", "--config", help="path to config file to be used", default=CONFIG_FILEPATH
+        "-c", "--config_path", help="path to config file to be used", 
+        default=CONFIG_FILEPATH
     )
     parser.add_argument(
         "-b", "--bat", help="path to crmms_viz_gen.bat", default=BAT_FILEPATH
     )
     parser.add_argument(
-        "-o", "--output", help="override default output folder", default='local'
+        "-o", "--output", help="override default output folder", 
+        default='local'
     )
     args = parser.parse_args()
     
     if args.version:
         print('crmms_viz_gen.py v1.0')
         
-    if not path.isfile(args.config):
+    if not path.isfile(args.config_path):
         print(f'Config file "{args.config}" does not exist, try again.')
         sys.exit(1)
     if not path.isfile(args.bat):
@@ -68,17 +71,19 @@ if __name__ == '__main__':
         
     print(
         'Refreshing all CRMM viz suites using config file found here: '
-        f'{args.config}'
+        f'{args.config_path}'
     )
-    with open(args.config, 'r') as configs:
+    with open(args.config_path, 'r') as configs:
         all_configs = json.load(configs)
-    config_names = list(set(all_configs.keys()))
+    config_names = list(sorted(set(all_configs.keys())))
     print(f' Found {len(config_names)} publication months...\n')
     print(f' Creating files here: {args.output}')
     results_summary = []
     for config_name in config_names:
         print(f'    Working on {config_name}...')
-        run_args = [args.bat, args.env, config_name, args.output, args.config]
+        run_args = [
+            args.bat, args.env, config_name, args.output, args.config_path
+        ]
         result = subprocess.run(
             run_args, 
             stdout=PIPE,
@@ -96,7 +101,7 @@ if __name__ == '__main__':
             if args.verbose:
                 std_out = result.stdout.split('\n')
                 std_out = '\n'.join([f'        {i}' for i in std_out])
-                print(f'      Success!\n{std_out}\n')
+                print(f'      Success!\n{std_out}')
             else:
                 print('      Success!')
             

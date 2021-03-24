@@ -235,8 +235,8 @@ def parse_model_ids(model_arg):
         sys.exit(1)
     return models
 
-def get_config(config_name, config_path=Path('crmms_viz.config').resolve()):
-    if not config_path.isfile():
+def get_config(config_name, config_path=None):
+    if not config_path.is_file():
         print(f'"{config_path}" is not a valid filepath, try again.')
         sys.exit(1)
     with config_path.open('r') as pub_config:
@@ -317,7 +317,7 @@ if __name__ == '__main__':
         "-o", "--output", help="override default output folder", default='local'
     )
     parser.add_argument(
-        "-f", "--file", 
+        "--config_path", 
         help='path to crmms_viz.config, used to overide deafault local one',
         default=Path(this_dir, 'crmms_viz.config')
     )
@@ -346,7 +346,7 @@ if __name__ == '__main__':
         watermark = True
     
     if args.config:
-        config_dict = get_config(args.config, args.file)
+        config_dict = get_config(args.config, args.config_path)
         args.name = config_dict['name']
         args.models = config_dict['mrids']
         args.data = config_dict['data']
@@ -370,11 +370,11 @@ if __name__ == '__main__':
     
     if not args.output == 'local':
         crmms_viz_dir = set_ouput_path(args.output)
+        print(crmms_viz_dir)
     else:
         crmms_viz_dir = Path(this_dir, 'crmms_viz').as_posix()
-        
-    makedirs(crmms_viz_dir, exist_ok=True)
-
+        makedirs(crmms_viz_dir, exist_ok=True)
+    
     if args.name:
         curr_month_str = check_suite_name(args.name)
         date_str = get_date_str(curr_month_str)
