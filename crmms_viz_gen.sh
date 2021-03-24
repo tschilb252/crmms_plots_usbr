@@ -16,7 +16,6 @@ readonly pyFile="./crmms_viz_gen.py"
 echo "Starting CRMMS plots generation..."
 
 python ${pyFile} --config $2 --output $3 --config_path $4 --provisional
-
+rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 echo "Process Complete!"
 
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
