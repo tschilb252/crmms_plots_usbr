@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row" id="header">
+    </div>
+    <div id="crmms-visualization-tool" class="m-2">
+        <h1>CRMMS Visualization Tool</h1>
+        <p>
+            The CRMMS Visualization Tool contains projections of Colorado River Basin reservoir conditions for a given initialization month. The tool displays projections from the 24-Month Study (24MS) model and the Mid-term Operations Model (MTOM), both created in the river and reservoir modeling software, RiverWare. The 24MS and MTOM are driven with input hydrologies produced by the Colorado Basin River Forecast Center (CBRFC). The 24MS Most Probable projections are available every month, with Minimum and Maximum Probable projections available in January, April, August, and October, representing the 90% and 10% exceedance streamflow forecasts, respectively. MTOM is driven with 35 Ensemble Streamflow Prediction (ESP) traces, created using a hydrologic model initialized with current basin conditions and simulated with historical weather (i.e. temperature and precipitation) from 1981 to 2015. For more information about the 24MS and MTOM simulations, see this 
+            <a href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html">website.</a>
+        </p>
+        <p>Projections from the 24MS and MTOM can be viewed on the same charts and are updated monthly, normally by mid-month. The 24MS is used to make official operational decisions. Reservoir operations are manually input by operators. MTOM is used for risk-based operational planning and analysis, with reservoir operations solved for using RiverWare rules. The 24MS Most Probable projections are updated monthly, with the Minimum and Maximum Probable projections available in January, April, August, and October. MTOM is run with 35 traces, with each trace labeled based on the historical year the forcings represent. Statistics are calculated from the MTOM traces, including the 10%, 25%, 50% (median), 75%, and 90% exceedance probabilities, along with the minimum, maximum, and mean. The 24MS Most Probable and MTOM median should be similar, though reservoir operations may differ since they are manually input by an operator in the 24MS, while being solved for by operational rules in MTOM.</p>
+        <div id="using-the-tool" class="m-2">
+            <h2>Using the Tool</h2>
+            <p>
+                A user can choose a current or historical CRMMS initialization month on the 
+                <a href="./index.html">navigator page</a>
+                . (Currently, runs are not available prior to January 2020). Specific reservoirs can be chosen from a drop-down menu, which navigates to charts for the specified reservoir. Selecting the Site Map will navigate to a map of the Colorado River Basin, with the twelve modeled reservoirs represented as blue pins. Choosing a reservoir from the map view will open a pop-up window with an overview of reservoir inflow, storage, and outflow. Individual reservoir variables can be selected on the left panel, along with options to download the data in a JSON or CSV format. To see the charts in a full screen view, click the reservoir name in the upper left corner.
+            </p>
+        </div>
+        <div id="reservoir-charts" class="m-2">
+            <h2>Reservoir Charts</h2>
+            <p>The dashboard initially shows an overview with charts of reservoir inflow, storage, and outflow. Other variables can be chosen from the left panel. The charts contain observations and projections from both MTOM and the 24MS. The time range shown on the chart can be modified by changing the range shown at the bottom of the dashboard. Mouse over the chart(s) to view traces and values. The legend on the right shows all possible traces and statistics that can be displayed on the chart.</p>
+        </div>
+        <div id="legend-details" class="m-2">
+            <h2>Legend Details</h2>
+            <p>Individual traces from the 24MS and MTOM simulations can be toggled on and off in the legend by clicking the individual trace or statistic name. A double click on the legend will toggle all traces on and off, except the clicked trace. The default chart shows observed data, the 24MS Most Probable trace, the median MTOM projection, and the 10th to 90th percentile of MTOM traces, which are represented by the gray shaded region. The data always represent end-of-month or monthly total values. The lines, or traces, are described below:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Observed:</strong> Observations of variables represented in the chart for the 12 months preceding the run.
+                </li>
+                <li class="list-group-item">
+                    <strong>24MS Traces:</strong> The 24MS Most Probable trace (24MS Most) is shown every month. The Minimum and Maximum Probable are shown in January, April, and August. The minimum and maximum probable 24MS projections represent the the 90% and 10% exceedance streamflow forecasts produced by the CBRFC, respectively.
+                </li>
+                <li class="list-group-item">
+                    <strong>MTOM Stats:</strong> MTOM statistics calculated from ESP: maximum, median, mean, minimum, and 10%, 25%, 75%, and 90% exceedance probabilities.
+                </li>
+                <li class="list-group-item">
+                    <strong>MTOM Traces:</strong> MTOM traces are labeled by the historical year that informed the first year of the hydrology trace.
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card m-2">
+        <div class="card-text">
+            <p class="card-header">Annotated screen shot of an overview dashboard.</p>
+        </div>
+        <img class="card-img-top p-3" src="./crmm_help.png" alt="Annotated screen shot of an overview dashboard.">
+    </div>
+</div>
