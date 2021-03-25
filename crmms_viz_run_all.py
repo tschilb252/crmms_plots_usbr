@@ -57,7 +57,7 @@ if __name__ == '__main__':
         print('crmms_viz_gen.py v1.0')
         
     if not path.isfile(args.config_path):
-        print(f'Config file "{args.config}" does not exist, try again.')
+        print(f'Config file "{args.config_path}" does not exist, try again.')
         sys.exit(1)
     if not path.isfile(args.bat):
         print(f'Bat file "{args.bat}" does not exist, try again.')
