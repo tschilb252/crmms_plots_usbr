@@ -301,6 +301,7 @@ if __name__ == '__main__':
     
     this_dir = Path().absolute()
     DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
+    DEFAULT_CONFIG_PATH = Path(this_dir, 'crmms_viz.config')
     
     cli_desc = 'Creates visualization suite for CRMMS results'
     parser = argparse.ArgumentParser(description=cli_desc)
@@ -318,8 +319,8 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         "--config_path", 
-        help='path to crmms_viz.config, used to overide deafault local one',
-        default=Path(this_dir, 'crmms_viz.config')
+        help=f'path to crmms_viz.config, used to overide deafault local one ({DEFAULT_CONFIG_PATH})',
+        default=DEFAULT_CONFIG_PATH
     )
     parser.add_argument(
         "-c", "--config", 
