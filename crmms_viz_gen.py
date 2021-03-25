@@ -301,7 +301,7 @@ if __name__ == '__main__':
     
     this_dir = Path().absolute()
     DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
-    DEFAULT_CONFIG_PATH = Path(this_dir, 'crmms_viz.config')
+    DEFAULT_CONFIG_PATH = Path(this_dir, 'configs', 'crmms_viz.config')
     
     cli_desc = 'Creates visualization suite for CRMMS results'
     parser = argparse.ArgumentParser(description=cli_desc)
@@ -387,7 +387,9 @@ if __name__ == '__main__':
     makedirs(curr_month_dir, exist_ok=True)
      
     meta_filepath = Path(curr_month_dir, 'meta.csv').as_posix()
-    logger = create_log(Path(crmms_viz_dir, 'crmms_viz_gen.log'))
+    log_dir = Path(this_dir, 'logs')
+    makedirs(log_dir, exist_ok=True)
+    logger = create_log(Path(log_dir, 'crmms_viz_gen.log'))
     
     col_names = ['run','trace','obj.slot','datetime','value','unit']
     dtypes = {

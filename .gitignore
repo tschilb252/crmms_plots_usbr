@@ -138,7 +138,8 @@ dmypy.json
 # crmms viz folder
 /crmms_viz
 
-# log files
+# log files and folder
+/logs
 *.log
 
 # gis folder

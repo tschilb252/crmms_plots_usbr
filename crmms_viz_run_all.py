@@ -7,6 +7,8 @@ Created on Wed Aug 26 13:28:52 2020
 
 import os
 import json
+from pathlib import Path
+from os import makedirs
 import subprocess
 from subprocess import PIPE
 from os import path
@@ -14,7 +16,7 @@ from os import path
 
 THIS_DIR = path.dirname(path.realpath(__file__))
 CONFIG_FILENAME = 'crmms_viz.config'
-CONFIG_FILEPATH = path.join(THIS_DIR, CONFIG_FILENAME)
+CONFIG_FILEPATH = path.join(THIS_DIR, 'configs', CONFIG_FILENAME)
 if os.name == 'nt':
     BAT_FILEPATH = path.join(THIS_DIR, 'crmms_viz_gen.bat')
 else:
@@ -68,7 +70,10 @@ if __name__ == '__main__':
         if not path.isdir(args.output):
             print(f'Output dir "{args.output}" does not exist, try again.')
             sys.exit(1)
-        
+    this_dir = Path().absolute()
+    log_dir = Path(this_dir, 'logs')
+    makedirs(log_dir, exist_ok=True)
+    
     print(
         'Refreshing all CRMM viz suites using config file found here: '
         f'{args.config_path}'
