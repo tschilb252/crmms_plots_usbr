@@ -38,7 +38,7 @@ def get_hovertemplate(units):
     }
     return hover_dict.get(units, "{y:,.2f}")#<br>{x}")
 
-def get_log_scale_dd(traces):
+def get_log_scale_dd():
     log_scale_dd = [
         {
             'active': 0,
@@ -76,7 +76,15 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
     water_years = df.columns.tolist()
     linetype = 'solid'
     for wy in water_years:
-        df_temp = df[wy]
+# TODO: This is for temp removal of next WY for MTOM traces
+        if wy not in show_traces:
+            df_temp = df[wy]
+            year = df_temp.index[1].year
+            df_temp = df_temp[df_temp.index.year == year]
+        else:
+            df_temp = df[wy]
+# TODO: move else statement to only case to revert, delete above, uncomment below
+        #df_temp = df[wy]
         x_vals = df_temp.index
         y_vals = df_temp.values
         show_trace = visible[wy.upper() in show_traces]
@@ -142,7 +150,12 @@ def create_stat_traces(df, datatype_name, units):
         show_trace = visible[col.lower() in show_traces]
         color = color_dict.get(col, 'rgba(0,0,0,0.3)')
         linetype = line_types.get(col, 'dashdot')
+# TODO: This is for temp removal of next WY for MTOM traces
         df_temp = df[col]
+        year = df_temp.index[1].year
+        df_temp = df_temp[df_temp.index.year == year]
+# TODO: move else statement to only case to revert, delete above, uncomment below        
+        #df_temp = df[col]
         x_vals = df_temp.index
         y_vals = df_temp.values
         trace_name = f'{col.upper()}'
@@ -331,7 +344,7 @@ def legend_heading(name, legendgroup=None, fillcolor='rgba(0,0,0,0)'):
     ]
 
 def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
-                 watermark=False):
+                 no_mtom=False, watermark=False):
 
     msg = f'  Working on {site_name} - {datatype_name} CRMMS chart...'
     print(msg)
@@ -362,13 +375,22 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
 
     mtom_traces = [i for i in traces if i.name.isnumeric() or 'MTOM' in i.name]
     twenty_four_month_traces = [i for i in traces if '24MS' in i.name]
-
-    traces = (
-        # mtom_traces + legend_heading('MTOM Traces') + 
-        # stat_traces + cloud_heading + 
-        twenty_four_month_traces + obs_trace
-    )
     
+    traces = []
+    mtom_traces = []
+    mtom_traces.extend(mtom_traces)
+    mtom_traces.extend(legend_heading('MTOM Traces'))
+    mtom_traces.extend(stat_traces)
+    mtom_traces.extend(cloud_heading)
+    # )
+    #     mtom_traces + legend_heading('MTOM Traces') + stat_traces + cloud_heading      
+    # )
+    if not no_mtom:
+        traces.extend(mtom_traces)
+        
+    traces.extend(twenty_four_month_traces)
+    traces.extend(obs_trace)
+
     tier_traces = get_tier_traces(
         obs_rng[0], model_rng[-1], site_name.lower(), datatype_name.lower()
     )
@@ -472,7 +494,7 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
             t=50,
             pad=5
         ),
-        updatemenus=get_log_scale_dd(traces)
+        updatemenus=get_log_scale_dd()
     )
 
     fig = go.Figure(

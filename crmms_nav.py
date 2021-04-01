@@ -22,7 +22,8 @@ bootstrap_css = bootstrap['css']
 bootstrap_js = bootstrap['js']
 jquery_js = bootstrap['jquery']
 
-header_str = f'''
+def get_header_str(year_str='CRMMS Modeling Results'):
+    return f'''
 <!DOCTYPE html>
 <html>
     <head>
@@ -48,7 +49,7 @@ header_str = f'''
 <div class="container">
 ''' + f'''
 <img src="{bor_seal}" style="width: 25%" class="img-responsive mx-auto d-block" alt="BOR Logo">
-    <h2>CRMMS Visualization Suite Navigator</h2>
+    <h2>{year_str}</h2>
 '''
 
 footer_str = '''
@@ -87,7 +88,7 @@ $(document).ready(function(){
 '''
 
 def get_updt_str():
-    return f'<i>Last updated: {dt.now().strftime("%x %X")}</i>'
+    return f'<i>Last updated: {dt.now().strftime("%x")}</i>'
 
 def remove_items(key_list, items_dict):
     for key in key_list:
@@ -250,7 +251,7 @@ def get_site_submenu_str(data_dir, site_data, site_id, button_label, meta):
 
     return site_submenu_str
 
-def create_nav(data_dir, nav_filename=None):
+def create_nav(year_str, data_dir, nav_filename=None):   
     nl = '\n'
     if not nav_filename:
         nav_filename = 'crmms_nav.html'
@@ -261,7 +262,8 @@ def create_nav(data_dir, nav_filename=None):
     walk_dict = remove_items(to_remove, walk_dict)
     # walk_dict = sorted(walk_dict, key=lambda x: x if not x.isnumeric() else int(x.split('_')[-1]) - int(x.split('_')[0]))
     button_str_list = []
-    for button_label, dd_items in walk_dict.items():
+    walk_dict = {k: v for k, v in walk_dict.items() if v}
+    for button_label, dd_items in sorted(walk_dict.items(), key=lambda x: int(x[0].split('_')[0])):
         if dd_items:
             button_path_abs = Path(data_dir, button_label)
             meta_path = Path(button_path_abs, 'meta.csv')
@@ -322,12 +324,26 @@ def create_nav(data_dir, nav_filename=None):
                 sites_dd_str
             )
             button_str_list.append(folder_button)
-
-    buttons_str = '\n'.join([i for i in button_str_list if i])
+    
+    if len(button_str_list) > 6:
+        col_one = '\n'.join([i for i in button_str_list[0:5] if i])
+        col_two = '\n'.join([i for i in button_str_list[6:-1] if i])
+        buttons_str = f'''
+            <div class="row">
+              <div class="col">
+                {col_one}
+              </div>
+              <div class="col">
+                {col_two}
+              </div>
+            </div>
+        '''
+    else:
+        buttons_str = '\n'.join([i for i in button_str_list if i])
 
     nl = '\n'
     nav_html_str = (
-        f'{header_str}{nl}{get_updt_str()}{nl}{buttons_str}{nl}{footer_str}'
+        f'{get_header_str(year_str)}{nl}{get_updt_str()}{nl}{buttons_str}{nl}{footer_str}'
     )
     write_nav_dict = {
         Path(data_dir, nav_filename): nav_html_str,

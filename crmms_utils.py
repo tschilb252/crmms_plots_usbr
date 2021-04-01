@@ -428,7 +428,7 @@ def get_js_refs():
     bootstrap_js = bootstrap['js']
     jquery_js = bootstrap['jquery']
     popper_js = bootstrap['popper']
-    feather_js = f'{STATIC_URL}/feather.min.js'
+    feather_js = f'{STATIC_URL}/feather/feather.min.js'
     return (f'''
 <!-- Bootstrap core JavaScript
 ================================================== -->

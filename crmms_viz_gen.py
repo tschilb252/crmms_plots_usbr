@@ -13,7 +13,7 @@ import numpy as np
 from pathlib import Path
 import plotly
 from os import makedirs, path
-from calendar import monthrange
+from calendar import monthrange, month_name
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta
 from logging.handlers import TimedRotatingFileHandler
@@ -81,7 +81,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
     try:
         site_name = site_meta['site_metadata.site_name'].upper()
         common_name = 'datatype_metadata.datatype_common_name'
-        datatype_name = f"{site_meta[common_name].upper()}"
+        datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
         fig = get_comp_fig(
             df_slot, df_obs, site_name, datatype_name, units, date_str, watermark
         )
@@ -170,19 +170,20 @@ def make_json(df, json_filename, logger):
         json_err = f'Error saving {json_filename} - {err}'
         print_and_log(json_err, logger)
 
-def make_nav(data_dir, logger=None):
-    # try:
-        nav_str = create_nav(data_dir)
-        print_and_log(nav_str, logger)
-    # except Exception as err:
-    #     nav_err = (
-    #         f'Error creating ff_nav.html file for {data_dir} - {err}'
-    #     )
-    #     print_and_log(nav_err, logger)
-
-def make_sitemap(site_type, df_meta, data_dir, logger=None):
+def make_nav(year_str, data_dir, logger=None):
     try:
-        map_str = create_map(site_type, df_meta, data_dir)
+        nav_str = create_nav(year_str, data_dir)
+        print_and_log(nav_str, logger)
+    except Exception as err:
+        nav_err = (
+            f'Error creating ff_nav.html file for {data_dir} - {err}'
+        )
+        print_and_log(nav_err, logger)
+
+def make_sitemap(date_str, site_type, df_meta, data_dir, logger=None):
+    
+    try:
+        map_str = create_map(date_str, site_type, df_meta, data_dir)
         print_and_log(map_str, logger)
     except Exception as err:
         map_err = (
@@ -278,10 +279,18 @@ def check_suite_name(suite_name):
 def get_date_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split('_')]
-        date_str = f'{dt(date_arr[1], date_arr[0], 1):%b %Y} Modelling Results'
+        date_str = f'{dt(date_arr[1], date_arr[0], 1):%b %Y} Modeling Results'
     except Exception:
-        date_str = f'{suite_name} Modelling Results'
+        date_str = f'{suite_name} Modeling Results'
     return date_str
+
+def get_year_str(suite_name):
+    try:
+        date_arr = [int(i) for i in suite_name.split('_')]
+        year_str = f'{date_arr[1]} Modeling Results'
+    except Exception:
+        year_str = f'{suite_name} Modeling Results'
+    return year_str
 
 def get_csv_path(csv_path):
     data_path = args.data
@@ -295,13 +304,7 @@ def get_csv_path(csv_path):
             sys.exit(1)
     return Path(data_path).resolve()
     
-if __name__ == '__main__':
-    
-    import argparse
-    
-    this_dir = Path().absolute()
-    DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
-    DEFAULT_CONFIG_PATH = Path(this_dir, 'configs', 'crmms_viz.config')
+def get_args():
     
     cli_desc = 'Creates visualization suite for CRMMS results'
     parser = argparse.ArgumentParser(description=cli_desc)
@@ -337,7 +340,21 @@ if __name__ == '__main__':
     parser.add_argument(
         "-d", "--data", help=f'override default data path ({DEFAULT_DATA_PATH})'
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--no_mtom", help="use/show mtom results in creation of suite", 
+        action="store_true", 
+    )
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    
+    import argparse
+    
+    this_dir = Path().absolute()
+    DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
+    DEFAULT_CONFIG_PATH = Path(this_dir, 'configs', 'crmms_viz.config')
+    
+    args = get_args()
     
     if args.version:
         print('crmms_viz_gen.py v1.0')
@@ -353,7 +370,7 @@ if __name__ == '__main__':
         args.data = config_dict['data']
     
     if args.data:
-        data_path = get_csv_path(args.data)
+        data_path = get_csv_path(args.data)            
     else:
         data_path = Path(DEFAULT_DATA_PATH).resolve()
         
@@ -379,9 +396,11 @@ if __name__ == '__main__':
     if args.name:
         curr_month_str = check_suite_name(args.name)
         date_str = get_date_str(curr_month_str)
+        year_str = get_year_str(curr_month_str)
     else:
         curr_month_str = f'{now_utc.month}_{now_utc.year}'
-        date_str = f'{now_utc:%b %Y} Modelling Results'
+        date_str = f'{now_utc:%b %Y} CRMMS Modeling Results'
+        year_str = f'{now_utc:%Y} CRMMS Modeling Results'
         
     curr_month_dir = Path(crmms_viz_dir, curr_month_str).as_posix()
     makedirs(curr_month_dir, exist_ok=True)
@@ -391,7 +410,7 @@ if __name__ == '__main__':
     makedirs(log_dir, exist_ok=True)
     logger = create_log(Path(log_dir, 'crmms_viz_gen.log'))
     
-    col_names = ['run','trace','obj.slot','datetime','value','unit']
+    col_names = ['run', 'trace', 'obj.slot', 'datetime', 'value', 'unit']
     dtypes = {
         'Run Number': np.int64,
         'Trace Number': np.int64,
@@ -536,15 +555,15 @@ if __name__ == '__main__':
                 }
             )
         df_table = serial_to_trace(df_slot.copy())
-        # removes crmms related data, temp until we can publish MTOM data
-        df_table = df_table[[i for i in df_table.columns if '24MS' in i.upper()]]
-        ###########################################
+        if args.no_mtom:
+            df_table = df_table[[i for i in df_table.columns if '24MS' in i.upper()]]
+
         make_csv(df_table, csv_filepath, logger)
         make_json(df_table, json_filepath, logger)
     print('Making subplots...')
     make_all_subplots(figs, curr_month_dir, date_str, watermark)
     print('Making site map...')
-    make_sitemap(curr_month_str, df_meta, crmms_viz_dir, logger)
+    make_sitemap(date_str, curr_month_str, df_meta, crmms_viz_dir, logger)
     print('Making nav...')
-    make_nav(crmms_viz_dir, logger)
+    make_nav(year_str, crmms_viz_dir, logger)
     create_help_page(crmms_viz_dir)

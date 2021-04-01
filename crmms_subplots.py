@@ -57,8 +57,8 @@ def update_layout(fig, site_name, units, initial_rng, date_str, watermark=False)
                 'font': {'size': 32, 'color': 'rgba(0,0,0,0.1)'},
                 'textangle': -27
         }    
-
-    fig['layout']['annotations'] += (annotation,)
+        fig['layout']['annotations'] += (annotation,)
+        
     fig.update_layout(
         template='plotly_white',
         title_text=(

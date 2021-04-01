@@ -13,7 +13,6 @@ import subprocess
 from subprocess import PIPE
 from os import path
 
-
 THIS_DIR = path.dirname(path.realpath(__file__))
 CONFIG_FILENAME = 'crmms_viz.config'
 CONFIG_FILEPATH = path.join(THIS_DIR, 'configs', CONFIG_FILENAME)

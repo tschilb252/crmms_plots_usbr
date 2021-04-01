@@ -7,6 +7,7 @@ Created on Fri May 31 07:43:40 2019
 
 
 from os import path
+from datetime import datetime as dt
 import folium
 import pandas as pd
 from folium.plugins import FloatImage
@@ -81,8 +82,33 @@ def add_markers(sitetype_map, meta):
             ).add_to(sitetype_map)
         except (ValueError, TypeError):
             pass
+        
+def get_legend(date_str):
 
-def create_map(site_type, meta, data_dir):
+    update_date = dt.now().strftime('%x')
+    legend_items = f'''
+      <a class="dropdown-item" href="../index.html">
+          Other Studies 
+        </a>
+      <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">
+          Updated: {update_date}<br>
+        </a>
+    '''
+    legend_dd = f'''
+    <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:401;">
+      <a class="btn btn-warning btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {date_str}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      {legend_items}   
+      </div>   
+    </div>
+  
+  '''
+    return legend_dd
+
+def create_map(date_str, site_type, meta, data_dir):
     meta = meta.drop_duplicates(subset='site_id')
     meta['site_metadata.lat'] = clean_coords(meta['site_metadata.lat'])
     meta['site_metadata.longi'] = clean_coords(meta['site_metadata.longi'], True)
@@ -96,11 +122,10 @@ def create_map(site_type, meta, data_dir):
     if bounds:
         sitetype_map.fit_bounds(bounds)
         add_markers(sitetype_map, meta.copy())
-        # add_huc_layer(
-        #     sitetype_map, level=2, huc_filter=('14', '15'), show=True
-        # )
-        # add_huc_layer(sitetype_map, level=6, huc_filter=('14', '15'))
-        # add_huc_layer(sitetype_map, level=8, huc_filter=('14', '15'))
+        add_huc_layer(
+            sitetype_map, level=2, huc_filter=('14', '15'), show=True,
+            huc_geojson_path='gis/HUC2.geojson', embed=True
+        )
         add_optional_tilesets(sitetype_map)
         folium.LayerControl().add_to(sitetype_map)
         FloatImage(
@@ -108,7 +133,8 @@ def create_map(site_type, meta, data_dir):
             bottom=1,
             left=1
         ).add_to(sitetype_map)
-        # MousePosition(prefix="Location: ").add_to(sitetype_map)
+        legend = folium.Element(get_legend(date_str))
+        sitetype_map.get_root().html.add_child(legend)
         sitetype_map.save(map_path)
         flavicon = (
             f'<link rel="shortcut icon" '
@@ -141,10 +167,10 @@ if __name__ == '__main__':
     this_dir = path.dirname(path.realpath(__file__))
     data_dir = path.join(this_dir, 'crmms_viz')
 
-    site_types = ['1_2020']
+    site_types = ['11_2020']
     for site_type in site_types:
         site_type_dir = path.join(data_dir, site_type)
         meta_path = path.join(data_dir, site_type, 'meta.csv')
         meta = pd.read_csv(meta_path)
-
-        create_map(site_type, meta, data_dir)
+        pub_date = 'November 2020 CRMMS Basin Map'
+        create_map(pub_date, site_type, meta, data_dir)

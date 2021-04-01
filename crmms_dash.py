@@ -49,7 +49,7 @@ def create_sidebar_link(chart_name, feather):
 
 def get_chart_navbar_links(chart_names):
     navbar_links = []
-    for chart_name in chart_names:
+    for chart_name in sorted(chart_names, key=lambda x: x if not x.lower() == 'overview' else '0'):
         feather = get_feather(chart_name.replace('_', ' '))
         nav_link = create_sidebar_link(chart_name, feather)
         if chart_name == 'overview':
@@ -109,7 +109,7 @@ def get_dash_body(site_name, site_id, chart_names):
     return f'''
 <body>
 <nav class="navbar navbar-light fixed-top bg-light navbar-expand p-auto flex-md-nowrap">
-  <a class="btn btn-outline-primary" target="_blank" href="#storage">{site_name}
+  <a class="btn btn-outline-primary" target="_blank" href="#overview">{site_name}
     <i class="fa fa-external-link" aria-hidden="true"></i>
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
@@ -118,14 +118,11 @@ def get_dash_body(site_name, site_id, chart_names):
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav  mr-auto">
       <li class="nav-item">
-        <a class="nav-link-primary ml-3" href="{get_map_url()}" target="_blank">Overview Map</a>
+        <a class="nav-link-primary ml-3" href="{get_map_url()}" target="_blank">Basin Map</a>
         </li>
-      <li class="nav-item">
-        <a class="nav-link-primary ml-3" href="{get_home_url()}" target="_blank">Navigator</a>
-      </li>
       <li class="nav-item dropdown">
         <a class="nav-link-primary ml-3 dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Jump to...
+        Jump to Reservoir...
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="../913/dashboard.html#overview" target="_blank">Blue Mesa</a>
@@ -141,6 +138,9 @@ def get_dash_body(site_name, site_id, chart_names):
           <a class="dropdown-item" href="../912/dashboard.html#overview" target="_blank">Taylor Park</a>
           <a class="dropdown-item" href="../933/dashboard.html#overview" target="_blank">Vallecito</a>
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link-primary ml-3" href="{get_home_url()}" target="_blank">Other Studies</a>
       </li>
     </ul>
   </div>
