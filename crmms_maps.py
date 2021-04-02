@@ -91,9 +91,9 @@ def get_legend(date_str):
           Other Studies 
         </a>
       <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">
+        <div class="dropdown-item" href="#">
           Updated: {update_date}<br>
-        </a>
+        </div>
     '''
     legend_dd = f'''
     <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:401;">
@@ -124,7 +124,7 @@ def create_map(date_str, site_type, meta, data_dir):
         add_markers(sitetype_map, meta.copy())
         add_huc_layer(
             sitetype_map, level=2, huc_filter=('14', '15'), show=True,
-            huc_geojson_path='gis/HUC2.geojson', embed=True
+            huc_geojson_path='./gis/HUC2.geojson', embed=True
         )
         add_optional_tilesets(sitetype_map)
         folium.LayerControl().add_to(sitetype_map)

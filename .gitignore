@@ -142,9 +142,6 @@ dmypy.json
 /logs
 *.log
 
-# gis folder
-/gis
-
 # data folder
 /data
 

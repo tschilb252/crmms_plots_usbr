@@ -326,8 +326,8 @@ def create_nav(year_str, data_dir, nav_filename=None):
             button_str_list.append(folder_button)
     
     if len(button_str_list) > 6:
-        col_one = '\n'.join([i for i in button_str_list[0:5] if i])
-        col_two = '\n'.join([i for i in button_str_list[6:-1] if i])
+        col_one = '\n'.join([i for i in button_str_list[:6] if i])
+        col_two = '\n'.join([i for i in button_str_list[6:] if i])
         buttons_str = f'''
             <div class="row">
               <div class="col">
@@ -356,5 +356,5 @@ def create_nav(year_str, data_dir, nav_filename=None):
 if __name__ == '__main__':
     this_dir = os.path.dirname(os.path.realpath(__file__))
     data_dir = os.path.join(this_dir, 'crmms_viz')
-    sys_out = create_nav(data_dir)
+    sys_out = create_nav('CRMMS data', data_dir)
     print(sys_out)
