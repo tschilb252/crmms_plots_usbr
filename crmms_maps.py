@@ -49,7 +49,7 @@ def get_bounds(meta):
 
 def get_embed(href):
     embed = (
-        f'<div class="container embed-responsive embed-responsive-16by9" style="overflow: hidden; height: 622px; width: 1200px;">'
+        f'<div class="container embed-responsive embed-responsive-16by9" style="overflow: hidden; height: 622px; width: 1000px;">'
         f'<iframe scrolling="no" class="embed-responsive-item" src="{href}" allowfullscreen></iframe>'
         f'</div>'
     )   
@@ -69,7 +69,6 @@ def add_markers(sitetype_map, meta):
             embed = get_embed(href)
 
             popup_html = (
-#                f'<a href="{href}" target="_blank">OPEN IN NEW WINDOW</a><br>'
                 f'{embed}'
                 f'Latitude: {round(lat, 3)}, '
                 f'Longitude: {round(lon, 3)}, '
@@ -99,7 +98,7 @@ def get_legend(date_str):
         </div>
     '''
     legend_dd = f'''
-    <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:0;">
+    <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:401;">
       <a class="btn btn-light btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {date_str}
       </a>
