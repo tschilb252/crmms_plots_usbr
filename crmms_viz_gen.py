@@ -78,7 +78,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
                     date_str, watermark=False, logger=None, plotly_js=None):
     if not plotly_js:
         plotly_js = get_plotly_js()
-    try:
+    if True:#try:
         site_name = site_meta['site_metadata.site_name'].upper()
         common_name = 'datatype_metadata.datatype_common_name'
         datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
@@ -104,12 +104,12 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
             html_file.write(chart_file_str.replace(r'</head>', flavicon))
         return fig
     
-    except Exception as err:
-        err_str = (
-            f'     Error creating chart - '
-            f'{chart_filename.split("flat_files")[-1]} - {err}'
-        )
-        print_and_log(err_str, logger)
+    # except Exception as err:
+    #     err_str = (
+    #         f'     Error creating chart - '
+    #         f'{chart_filename.split("flat_files")[-1]} - {err}'
+    #     )
+    #     print_and_log(err_str, logger)
 
 def get_meta(sids, dids):
     tbls = HdbTables
@@ -486,7 +486,8 @@ if __name__ == '__main__':
 
         if sdi:
             t1 = min(df_slot['datetime'])
-            t2 = max(df_slot['datetime'])
+            # t2 = max(df_slot['datetime'])
+            t2 = t1 + relativedelta(months=25)
             dates = list(df_slot['datetime'].unique())
             hdb_alias = hdb_alias_map[site_name]
             display_name = res_display_names()[site_name]

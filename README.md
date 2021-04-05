@@ -11,17 +11,20 @@ The following libraries are required for the project
 - [plotly](https://plot.ly/)
 - [requests](https://2.python-requests.org/en/master/)
 - [hdb_api](https://github.com/beautah/hdb_api)
-
+- [folium](https://github.com/python-visualization/folium)
 
 ## Usage
 
-```python
-from project import stuff #needs to be updated
-make_cool_charts(mtom_data) #needs to be updated
+```bash
+# for single run
+python ./crmms_viz_gen.py --config_path </path/to/config/crmms_viz.config> --output </path/to/static/file/server> --config <config_key>
+
+# to run all keys in a config file
+python ./crmms_viz_run_all.py --config </path/to/config/crmms_viz.config> --output </path/to/static/file/server>
 ```
 
 ## Contributing
-Contact [Beau Uriona](mailto:beau.uriona@google.com)
+Contact [Beau Uriona](mailto:beau.uriona@gmail.com)
 
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

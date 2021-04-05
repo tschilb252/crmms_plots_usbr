@@ -23,6 +23,9 @@ default_css = get_default_css()
 folium.folium.Map.default_js = default_js
 folium.folium.Map.default_css = default_css
 
+this_dir = path.dirname(path.realpath(__file__))
+GIS_DIR = path.join(this_dir, 'gis')
+
 def get_bounds(meta):
     meta_no_dups = meta.drop_duplicates(subset='site_id')
     lats = []
@@ -109,6 +112,9 @@ def get_legend(date_str):
     return legend_dd
 
 def create_map(date_str, site_type, meta, data_dir):
+    this_dir = path.dirname(path.realpath(__file__))
+    gis_dir = path.join(this_dir, 'gis')
+    huc2_geojson_path = path.join(gis_dir, 'HUC2.geojson')
     meta = meta.drop_duplicates(subset='site_id')
     meta['site_metadata.lat'] = clean_coords(meta['site_metadata.lat'])
     meta['site_metadata.longi'] = clean_coords(meta['site_metadata.longi'], True)
@@ -124,7 +130,7 @@ def create_map(date_str, site_type, meta, data_dir):
         add_markers(sitetype_map, meta.copy())
         add_huc_layer(
             sitetype_map, level=2, huc_filter=('14', '15'), show=True,
-            huc_geojson_path='./gis/HUC2.geojson', embed=True
+            huc_geojson_path=huc2_geojson_path, embed=True
         )
         add_optional_tilesets(sitetype_map)
         folium.LayerControl().add_to(sitetype_map)

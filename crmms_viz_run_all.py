@@ -28,7 +28,7 @@ if __name__ == '__main__':
     import sys
     import argparse
     
-    cli_desc = 'Creates visualization suite for all CRMM results in config file'
+    cli_desc = 'Creates visualization suite for all CRMMS results in config file'
     parser = argparse.ArgumentParser(description=cli_desc)
     parser.add_argument(
         "-V", "--version", help="show program version", action="store_true"

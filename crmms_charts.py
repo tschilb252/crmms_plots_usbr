@@ -77,14 +77,14 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
     linetype = 'solid'
     for wy in water_years:
 # TODO: This is for temp removal of next WY for MTOM traces
-        if wy not in show_traces:
-            df_temp = df[wy]
-            year = df_temp.index[1].year
-            df_temp = df_temp[df_temp.index.year == year]
-        else:
-            df_temp = df[wy]
+        # if wy not in show_traces:
+        #     df_temp = df[wy]
+        #     year = df_temp.index[1].year
+        #     df_temp = df_temp[df_temp.index.year == year]
+        # else:
+        #     df_temp = df[wy]
 # TODO: move else statement to only case to revert, delete above, uncomment below
-        #df_temp = df[wy]
+        df_temp = df[wy]
         x_vals = df_temp.index
         y_vals = df_temp.values
         show_trace = visible[wy.upper() in show_traces]
@@ -151,11 +151,11 @@ def create_stat_traces(df, datatype_name, units):
         color = color_dict.get(col, 'rgba(0,0,0,0.3)')
         linetype = line_types.get(col, 'dashdot')
 # TODO: This is for temp removal of next WY for MTOM traces
-        df_temp = df[col]
-        year = df_temp.index[1].year
-        df_temp = df_temp[df_temp.index.year == year]
+        # df_temp = df[col]
+        # year = df_temp.index[1].year
+        # df_temp = df_temp[df_temp.index.year == year]
 # TODO: move else statement to only case to revert, delete above, uncomment below        
-        #df_temp = df[col]
+        df_temp = df[col]
         x_vals = df_temp.index
         y_vals = df_temp.values
         trace_name = f'{col.upper()}'
