@@ -344,7 +344,7 @@ def legend_heading(name, legendgroup=None, fillcolor='rgba(0,0,0,0)'):
     ]
 
 def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
-                 no_mtom=False, watermark=False):
+                 watermark=False, no_mtom=True):
 
     msg = f'  Working on {site_name} - {datatype_name} CRMMS chart...'
     print(msg)
@@ -382,9 +382,6 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     mtom_traces.extend(legend_heading('MTOM Traces'))
     mtom_traces.extend(stat_traces)
     mtom_traces.extend(cloud_heading)
-    # )
-    #     mtom_traces + legend_heading('MTOM Traces') + stat_traces + cloud_heading      
-    # )
     if not no_mtom:
         traces.extend(mtom_traces)
         

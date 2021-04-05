@@ -99,8 +99,8 @@ def get_legend(date_str):
         </div>
     '''
     legend_dd = f'''
-    <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:401;">
-      <a class="btn btn-warning btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div class="dropdown show" style="position: fixed; top: 10px; left: 50px; z-index:0;">
+      <a class="btn btn-light btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {date_str}
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">

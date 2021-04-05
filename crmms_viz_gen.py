@@ -13,7 +13,7 @@ import numpy as np
 from pathlib import Path
 import plotly
 from os import makedirs, path
-from calendar import monthrange, month_name
+from calendar import monthrange
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta
 from logging.handlers import TimedRotatingFileHandler
@@ -75,15 +75,24 @@ def create_log(path='crmms_viz_gen.log'):
     return logger
 
 def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
-                    date_str, watermark=False, logger=None, plotly_js=None):
+                    date_str, watermark=False, no_mtom=True, logger=None, 
+                    plotly_js=None):
+    
     if not plotly_js:
         plotly_js = get_plotly_js()
-    if True:#try:
+    try:
         site_name = site_meta['site_metadata.site_name'].upper()
         common_name = 'datatype_metadata.datatype_common_name'
         datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
         fig = get_comp_fig(
-            df_slot, df_obs, site_name, datatype_name, units, date_str, watermark
+            df_slot=df_slot, 
+            df_obs=df_obs, 
+            site_name=site_name, 
+            datatype_name=datatype_name, 
+            units=units, 
+            date_str=date_str, 
+            watermark=watermark, 
+            no_mtom=no_mtom
         )
         plotly.offline.plot(
             fig,
@@ -104,12 +113,12 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
             html_file.write(chart_file_str.replace(r'</head>', flavicon))
         return fig
     
-    # except Exception as err:
-    #     err_str = (
-    #         f'     Error creating chart - '
-    #         f'{chart_filename.split("flat_files")[-1]} - {err}'
-    #     )
-    #     print_and_log(err_str, logger)
+    except Exception as err:
+        err_str = (
+            f'     Error creating chart - '
+            f'{chart_filename.split("flat_files")[-1]} - {err}'
+        )
+        print_and_log(err_str, logger)
 
 def get_meta(sids, dids):
     tbls = HdbTables
@@ -534,14 +543,15 @@ if __name__ == '__main__':
                 )
                 
         fig = make_comp_chart(
-            df_slot, 
-            df_obs, 
-            df_meta.loc[sdi], 
-            chart_filepath,
-            img_filename,
-            date_str,
-            watermark,
-            logger, 
+            df_slot=df_slot, 
+            df_obs=df_obs, 
+            site_meta=df_meta.loc[sdi], 
+            chart_filename=chart_filepath,
+            img_filename=img_filename,
+            date_str=date_str,
+            watermark=watermark,
+            no_mtom=args.no_mtom,
+            logger=logger, 
             plotly_js=None
         )
         if not datatype_lower == 'pool elevation':
