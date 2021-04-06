@@ -288,7 +288,7 @@ def check_suite_name(suite_name):
 def get_date_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split('_')]
-        date_str = f'{dt(date_arr[1], date_arr[0], 1):%b %Y} Modeling Results'
+        date_str = f'{dt(date_arr[1], date_arr[0], 1):%B %Y} Modeling Results'
     except Exception:
         date_str = f'{suite_name} Modeling Results'
     return date_str
