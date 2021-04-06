@@ -213,6 +213,8 @@ def get_sub_menus(label, href, sub_menu_dict={}, sub_menu_dd=''):
     return sub_menu_str
 
 def get_site_submenu_str(data_dir, site_data, site_id, button_label, meta):
+    if 'overview' in button_label.lower():
+        return ''
     charts_dd = []
     json_dd = []
     csv_dd = []

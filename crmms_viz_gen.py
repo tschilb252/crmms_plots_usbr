@@ -80,7 +80,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
     
     if not plotly_js:
         plotly_js = get_plotly_js()
-    try:
+    if True:#try:
         site_name = site_meta['site_metadata.site_name'].upper()
         common_name = 'datatype_metadata.datatype_common_name'
         datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
@@ -113,12 +113,12 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
             html_file.write(chart_file_str.replace(r'</head>', flavicon))
         return fig
     
-    except Exception as err:
-        err_str = (
-            f'     Error creating chart - '
-            f'{chart_filename.split("flat_files")[-1]} - {err}'
-        )
-        print_and_log(err_str, logger)
+    # except Exception as err:
+    #     err_str = (
+    #         f'     Error creating chart - '
+    #         f'{chart_filename.split("flat_files")[-1]} - {err}'
+    #     )
+    #     print_and_log(err_str, logger)
 
 def get_meta(sids, dids):
     tbls = HdbTables
@@ -325,7 +325,6 @@ def get_args():
         help="watermarks charts with provisional disclaimer", 
         action="store_true"
     )
-    # parser.add_argument("-r", "--rise", help="create RISE jsons, push only if sftp_push set to true or valid path in config", action="store_true")
     parser.add_argument(
         "-o", "--output", help="override default output folder", default='local'
     )
@@ -494,10 +493,16 @@ if __name__ == '__main__':
         json_filepath = Path(json_dir, json_filename).as_posix()
 
         if sdi:
-            t1 = min(df_slot['datetime'])
-            # t2 = max(df_slot['datetime'])
-            t2 = t1 + relativedelta(months=25)
-            dates = list(df_slot['datetime'].unique())
+            try:
+                date_arr = args.name.split('_')
+                s_year = date_arr[-1]
+                s_month = date_arr[0]
+                t1 = dt(int(s_year), int(s_month), 1)# - relativedelta(months=1)
+            except Exception:
+                t1 = min(df_slot['datetime'])
+            t2 = t1 + relativedelta(months=24)
+            df_slot = df_slot[df_slot['datetime'] > t1]
+            df_slot = df_slot[df_slot['datetime'] < t1 + relativedelta(years=5)]
             hdb_alias = hdb_alias_map[site_name]
             display_name = res_display_names()[site_name]
             for model_type, model_id in models.items():
@@ -519,7 +524,7 @@ if __name__ == '__main__':
                             sort=False
                         )
             t1_obs = t1 - relativedelta(years=1)
-            t2_obs = t1 - relativedelta(months=1)
+            t2_obs = t1 #- relativedelta(months=1)
             df_obs = get_real_data(
                 sdi,
                 hdb_alias,

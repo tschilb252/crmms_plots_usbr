@@ -9,6 +9,7 @@ import branca
 import pandas as pd
 import plotly.graph_objs as go
 from datetime import datetime as dt
+from dateutil.relativedelta import relativedelta
 from crmms_utils import get_tier_traces, get_bor_seal, serial_to_trace
 
 def get_colormap():
@@ -357,8 +358,8 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     obs_rng = df_obs_trace.index.tolist()
     initial_rng = [obs_rng[0], model_rng[24]]
     percentiles = [0.10, 0.25, 0.50, 0.75, 0.90]
-    non_stats_cols = [x for x in df_trace.columns if not str(x).isdigit()]
-    df_stats = df_trace.drop([non_stats_cols], errors='ignore')
+    stats_cols = [x for x in df_trace.columns if str(x).isdigit()]
+    df_stats = df_trace[stats_cols].copy()
     df_stats = df_stats.transpose()
     df_stats = df_stats.describe(percentiles=percentiles).transpose()
     
@@ -373,12 +374,12 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
             fillcolor='rgba(0,0,0,0)'
         )
 
-    mtom_traces = [i for i in traces if i.name.isnumeric() or 'MTOM' in i.name]
+    mtom_yr_traces = [i for i in traces if i.name.isnumeric() or 'MTOM' in i.name]
     twenty_four_month_traces = [i for i in traces if '24MS' in i.name]
     
     traces = []
     mtom_traces = []
-    mtom_traces.extend(mtom_traces)
+    mtom_traces.extend(mtom_yr_traces)
     mtom_traces.extend(legend_heading('MTOM Traces'))
     mtom_traces.extend(stat_traces)
     mtom_traces.extend(cloud_heading)
@@ -389,7 +390,10 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     traces.extend(obs_trace)
 
     tier_traces = get_tier_traces(
-        obs_rng[0], model_rng[-1], site_name.lower(), datatype_name.lower()
+        obs_rng[0] - relativedelta(years=1), 
+        obs_rng[0] + relativedelta(years=5), 
+        site_name.lower(), 
+        datatype_name.lower()
     )
     if tier_traces:
         traces.extend(tier_traces)

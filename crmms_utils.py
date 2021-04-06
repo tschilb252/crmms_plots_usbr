@@ -187,8 +187,13 @@ def serial_to_trace(df, val_col='value', trace_col='trace', dt_col='datetime'):
     df_out = pd.DataFrame(index=dates)
     for trace in sorted(traces):
         df_temp = df[df[trace_col] == trace][val_col]
+        # print(df_temp, df_out)
         missing_data_len = (len(df_out.index) - len(df_temp.index))
-        df_out[trace] = df_temp.to_list() + [np.nan] * missing_data_len
+        df_out.insert(
+            0, 
+            trace, 
+            np.array(df_temp.to_list() + [np.nan] * missing_data_len)
+        )
         df_out.index.name = 'date'
     return df_out
 
