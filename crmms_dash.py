@@ -10,6 +10,8 @@ from hdb_api.hdb_utils import datatype_units, datatype_common_names
 from crmms_utils import get_bor_seal,  map_dids
 from crmms_utils import get_html_head, get_js_refs
 
+SKIP_DATA_LINKS = ['overview']
+
 label_unit_dict = {
     datatype_common_names[i]: datatype_units[i] for i in datatype_units.keys()
 }
@@ -74,10 +76,8 @@ def get_embeds(chart_names):
     return '\n'.join(embeds)
 
 def create_data_link(chart_name, file_type):
-#    data_type = datatype_common_names_rev.get(
-#        chart_name.replace('_', ' '),
-#        'UNKNOWN DATA TYPE'
-#    )
+    if chart_name.lower() in SKIP_DATA_LINKS:
+        return ''
     data_type = map_dids(chart_name.title())
     ext = file_type.lower()
     label = chart_name.title().replace('_', ' ')

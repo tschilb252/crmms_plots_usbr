@@ -131,14 +131,14 @@ def create_data_dd(button_label, site_id, data, data_dir, meta, data_format):
         site_data_dd_href = Path(data_href, data_name)
         data_menu_dict[data_label] = site_data_dd_href
 
-    json_dd = get_sub_menus(
+    data_dd = get_sub_menus(
         f'{data_format.upper()} DATA',
         data_href,
         data_menu_dict,
         sub_menu_dd=''
     )
 
-    return json_dd
+    return data_dd
 
 def get_folders(rootdir):
     dir_dict = {}
@@ -213,8 +213,6 @@ def get_sub_menus(label, href, sub_menu_dict={}, sub_menu_dd=''):
     return sub_menu_str
 
 def get_site_submenu_str(data_dir, site_data, site_id, button_label, meta):
-    if 'overview' in button_label.lower():
-        return ''
     charts_dd = []
     json_dd = []
     csv_dd = []

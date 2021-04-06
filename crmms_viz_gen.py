@@ -497,7 +497,7 @@ if __name__ == '__main__':
                 date_arr = args.name.split('_')
                 s_year = date_arr[-1]
                 s_month = date_arr[0]
-                t1 = dt(int(s_year), int(s_month), 1)# - relativedelta(months=1)
+                t1 = dt(int(s_year), int(s_month), 1)
             except Exception:
                 t1 = min(df_slot['datetime'])
             t2 = t1 + relativedelta(months=24)
@@ -524,7 +524,7 @@ if __name__ == '__main__':
                             sort=False
                         )
             t1_obs = t1 - relativedelta(years=1)
-            t2_obs = t1 #- relativedelta(months=1)
+            t2_obs = t1
             df_obs = get_real_data(
                 sdi,
                 hdb_alias,
