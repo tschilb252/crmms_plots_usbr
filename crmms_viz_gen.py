@@ -80,7 +80,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
     
     if not plotly_js:
         plotly_js = get_plotly_js()
-    if True:#try:
+    try:
         site_name = site_meta['site_metadata.site_name'].upper()
         common_name = 'datatype_metadata.datatype_common_name'
         datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
@@ -113,12 +113,12 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
             html_file.write(chart_file_str.replace(r'</head>', flavicon))
         return fig
     
-    # except Exception as err:
-    #     err_str = (
-    #         f'     Error creating chart - '
-    #         f'{chart_filename.split("flat_files")[-1]} - {err}'
-    #     )
-    #     print_and_log(err_str, logger)
+    except Exception as err:
+        err_str = (
+            f'     Error creating chart - '
+            f'{chart_filename.split("flat_files")[-1]} - {err}'
+        )
+        print_and_log(err_str, logger)
 
 def get_meta(sids, dids):
     tbls = HdbTables
@@ -508,12 +508,12 @@ if __name__ == '__main__':
             for model_type, model_id in models.items():
                 if model_id:
                     df_model = get_model_data(
-                        sdi,
-                        hdb_alias,
-                        model_id,
-                        'value',
-                        t1,
-                        t2
+                        sdi=sdi,
+                        hdb_alias= hdb_alias,
+                        model_id=model_id,
+                        datatype_str='value',
+                        t1=t1,
+                        t2=t2
                     )
                     if not df_model.empty:
                         df_model['datetime'] = df_model.index
@@ -523,6 +523,7 @@ if __name__ == '__main__':
                             ignore_index=True,
                             sort=False
                         )
+                    
             t1_obs = t1 - relativedelta(years=1)
             t2_obs = t1
             df_obs = get_real_data(
