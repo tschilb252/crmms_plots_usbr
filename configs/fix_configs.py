@@ -17,10 +17,10 @@ this_dir = Path().absolute()
 for config in this_dir.glob('*.config'):
     if 'models.config' in config.name or 'viz.config' in config.name:
         continue
-    
+
     with config.open('r') as j:
         config_dict = json.load(j)
-    
+
     new_config = {}
     for k, v in config_dict.items():
         k_arr = k.split('_')
@@ -35,7 +35,7 @@ for config in this_dir.glob('*.config'):
             'mrids': mrids,
             'data': data
         }
-    
+
     with config.open('w') as j:
         json.dump(new_config, j, indent=2, sort_keys=True)
 

@@ -24,10 +24,10 @@ VENV_LOC = path.join(path.dirname(THIS_DIR), 'crmm_py')
 DEFAULT_OUTPUT_PATH = path.join(THIS_DIR, 'crmms_viz')
 
 if __name__ == '__main__':
-    
+
     import sys
     import argparse
-    
+
     cli_desc = 'Creates visualization suite for all CRMMS results in config file'
     parser = argparse.ArgumentParser(description=cli_desc)
     parser.add_argument(
@@ -40,21 +40,21 @@ if __name__ == '__main__':
         "-e", "--env", help="path to conda venv to be used", default=VENV_LOC
     )
     parser.add_argument(
-        "-c", "--config_path", help="path to config file to be used", 
+        "-c", "--config_path", help="path to config file to be used",
         default=CONFIG_FILEPATH
     )
     parser.add_argument(
         "-b", "--bat", help="path to crmms_viz_gen.bat", default=BAT_FILEPATH
     )
     parser.add_argument(
-        "-o", "--output", help="override default output folder", 
+        "-o", "--output", help="override default output folder",
         default='local'
     )
     args = parser.parse_args()
-    
+
     if args.version:
         print('crmms_viz_gen.py v1.0')
-        
+
     if not path.isfile(args.config_path):
         print(f'Config file "{args.config_path}" does not exist, try again.')
         sys.exit(1)
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     if not os.name == 'nt':
         print(f'Changing permissions of {args.bat}')
         os.chmod(args.bat, 0o774)
-        
+
     if not args.output == 'local':
         if not path.isdir(args.output):
             print(f'Output dir "{args.output}" does not exist, try again.')
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     this_dir = Path().absolute()
     log_dir = Path(this_dir, 'logs')
     makedirs(log_dir, exist_ok=True)
-    
+
     print(
         'Refreshing all CRMM viz suites using config file found here: '
         f'{args.config_path}'
@@ -89,7 +89,7 @@ if __name__ == '__main__':
             args.bat, args.env, config_name, args.output, args.config_path
         ]
         result = subprocess.run(
-            run_args, 
+            run_args,
             stdout=PIPE,
             stderr=PIPE,
             encoding='utf-8'

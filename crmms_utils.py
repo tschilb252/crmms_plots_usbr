@@ -23,7 +23,7 @@ def get_dashboard_css():
     return f'{STATIC_URL}/dashboard.css'
 
 def get_bootstrap():
-    
+
     return {
         'css': f'{STATIC_URL}/bootstrap/css/bootstrap.min.css',
         'js': f'{STATIC_URL}/bootstrap/js/bootstrap.bundle.js',
@@ -45,34 +45,34 @@ def get_bor_seal(orient='default', grey=False):
     return f'{STATIC_URL}/img/{seal_dict[orient]}'
 
 def get_default_js():
-    
+
     bootstrap_dict = get_bootstrap()
     return [
-        ('leaflet', 
+        ('leaflet',
          f'{STATIC_URL}/leaflet/js/leaflet.js'),
-        ('jquery', 
+        ('jquery',
          bootstrap_dict['jquery']),
-        ('popper', 
+        ('popper',
          bootstrap_dict['popper']),
-        ('bootstrap', 
+        ('bootstrap',
          bootstrap_dict['js']),
-        ('awesome_markers', 
+        ('awesome_markers',
          f'{STATIC_URL}/leaflet-awesome-markers/leaflet.awesome-markers.min.js'),
     ]
 
 def get_default_css():
-    
+
     bootstrap_dict = get_bootstrap()
     return [
-        ('leaflet_css', 
+        ('leaflet_css',
          f'{STATIC_URL}/leaflet/css/leaflet.css'),
-        ('bootstrap_css', 
+        ('bootstrap_css',
          bootstrap_dict['css']),
-        ('awesome_markers_font_css', 
+        ('awesome_markers_font_css',
           bootstrap_dict['fa']),
-        ('awesome_markers_css', 
+        ('awesome_markers_css',
         f'{STATIC_URL}/leaflet-awesome-markers/leaflet.awesome-markers.css'),
-        ('awesome_rotate_css', 
+        ('awesome_rotate_css',
          f'{STATIC_URL}/leaflet-awesome-markers/leaflet.awesome.rotate.css'),
     ]
 
@@ -190,7 +190,7 @@ def serial_to_trace(df, val_col='value', trace_col='trace', dt_col='datetime'):
         missing_data_len = (len(df_out.index) - len(df_temp.index))
         df_out.insert(
             0,
-            trace, 
+            trace,
             np.array(df_temp[val_col].to_list() + [np.nan] * missing_data_len)
         )
         df_out.index.name = 'date'
@@ -337,7 +337,7 @@ def add_optional_tilesets(folium_map):
     for name, tileset in tilesets.items():
         folium.TileLayer(tileset, name=name).add_to(folium_map)
 
-def add_huc_layer(huc_map, level=2, huc_geojson_path=None, embed=False, 
+def add_huc_layer(huc_map, level=2, huc_geojson_path=None, embed=False,
                   show=True, huc_filter='', zoom_on_click=False):
     try:
         if type(huc_filter) == int:
@@ -349,9 +349,9 @@ def add_huc_layer(huc_map, level=2, huc_geojson_path=None, embed=False,
             embed = True
         if huc_filter:
            huc_style = lambda x: {
-            'fillColor': '#ffffff00', 'color': '#1f1f1faa', 
+            'fillColor': '#ffffff00', 'color': '#1f1f1faa',
             'weight': weight if x['properties'][f'HUC{level}'].startswith(huc_filter) else 0
-        } 
+        }
         else:
             huc_style = lambda x: {
                 'fillColor': '#ffffff00', 'color': '#1f1f1faa', 'weight': weight
@@ -368,10 +368,10 @@ def add_huc_layer(huc_map, level=2, huc_geojson_path=None, embed=False,
         print(f'Could not add HUC {level} layer to map! - {err}')
 
 def clean_coords(coord_series, force_neg=False):
-    
+
     coord_series = coord_series.apply(
-        pd.to_numeric, 
-        errors='ignore', 
+        pd.to_numeric,
+        errors='ignore',
         downcast='float'
     )
     if not coord_series.apply(type).eq(str).any():
@@ -477,6 +477,6 @@ def get_js_refs():
     });
   </script>'''
 )
-            
+
 if __name__ == '__main__':
     print('Utility file... I do nothing...  (╯︵╰,)')

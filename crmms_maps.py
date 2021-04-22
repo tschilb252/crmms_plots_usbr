@@ -5,7 +5,6 @@ Created on Fri May 31 07:43:40 2019
 @author: buriona
 """
 
-
 from os import path
 from datetime import datetime as dt
 import folium
@@ -52,7 +51,7 @@ def get_embed(href):
         f'<div class="container embed-responsive embed-responsive-16by9" style="overflow: hidden; height: 622px; width: 1000px;">'
         f'<iframe scrolling="no" class="embed-responsive-item" src="{href}" allowfullscreen></iframe>'
         f'</div>'
-    )   
+    )
     return embed
 
 def add_markers(sitetype_map, meta):
@@ -84,13 +83,13 @@ def add_markers(sitetype_map, meta):
             ).add_to(sitetype_map)
         except (ValueError, TypeError):
             pass
-        
+
 def get_legend(date_str):
 
     update_date = dt.now().strftime('%x')
     legend_items = f'''
       <a class="dropdown-item" href="../index.html">
-          Other Studies 
+          Other Studies
         </a>
       <div class="dropdown-divider"></div>
         <div class="dropdown-item" href="#">
@@ -103,10 +102,10 @@ def get_legend(date_str):
         {date_str}
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-      {legend_items}   
-      </div>   
+      {legend_items}
+      </div>
     </div>
-  
+
   '''
     return legend_dd
 
@@ -117,7 +116,7 @@ def create_map(date_str, site_type, meta, data_dir):
     meta = meta.drop_duplicates(subset='site_id')
     meta['site_metadata.lat'] = clean_coords(meta['site_metadata.lat'])
     meta['site_metadata.longi'] = clean_coords(meta['site_metadata.longi'], True)
-    
+
     sitetype_dir = path.join(data_dir, site_type)
     map_filename = 'site_map.html'
     map_path = path.join(sitetype_dir, map_filename)
@@ -160,10 +159,10 @@ def create_map(date_str, site_type, meta, data_dir):
             )
             chart_file_str = chart_file_str.replace(r'left:1%;', replace_str)
             html_file.write(chart_file_str)
-            
+
         with open(path.join(sitetype_dir, 'index.html'), 'w') as index_pg:
             index_pg.write(chart_file_str)
-            
+
         return f'  Created map for {site_type}'
     else:
         return '  Failed to create map for {site_type}, no sites with coordinates'

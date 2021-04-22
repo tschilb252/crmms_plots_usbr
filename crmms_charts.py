@@ -21,9 +21,9 @@ def get_colormap():
 def get_trace_color(wy, colormap=get_colormap()):
     wy_str = str(wy)
     color_dict = {
-        '24MS MOST': '#3de12e', 
-        '24MS MIN': 'red', 
-        '24MS MAX': 'blue', 
+        '24MS MOST': '#3de12e',
+        '24MS MIN': 'red',
+        '24MS MAX': 'blue',
         'OBSERVED': 'black'
     }
     if wy_str.isdigit():
@@ -155,7 +155,7 @@ def create_stat_traces(df, datatype_name, units):
         # df_temp = df[col]
         # year = df_temp.index[1].year
         # df_temp = df_temp[df_temp.index.year == year]
-# TODO: move else statement to only case to revert, delete above, uncomment below        
+# TODO: move else statement to only case to revert, delete above, uncomment below
         df_temp = df[col]
         x_vals = df_temp.index
         y_vals = df_temp.values
@@ -259,7 +259,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
 
 def scatter_trace(x, y, show_trace, name, color=None, linetype='solid',
                   width=2, hovertemplate=None):
-    
+
     trace = go.Scatter(
         x=x,
         y=y,
@@ -339,7 +339,7 @@ def legend_heading(name, legendgroup=None, fillcolor='rgba(0,0,0,0)'):
             name=f'<b>{name}</b>',
             line={'color': 'rgba(0, 0, 0, 0)'},
             legendgroup=legendgroup,
-            fillcolor=fillcolor, 
+            fillcolor=fillcolor,
             hoverinfo='skip'
         )
     ]
@@ -362,21 +362,21 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     df_stats = df_trace[stats_cols].copy()
     df_stats = df_stats.transpose()
     df_stats = df_stats.describe(percentiles=percentiles).transpose()
-    
+
     colormap = get_colormap()
     traces = create_wy_traces(df_trace, datatype_name, units, colormap)
     stat_traces = create_stat_traces(df_stats, datatype_name, units)
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-            'MTOM Stats', 
+            'MTOM Stats',
             legendgroup='MTOM CLOUD',
             fillcolor='rgba(0,0,0,0)'
         )
 
     mtom_yr_traces = [i for i in traces if i.name.isnumeric() or 'MTOM' in i.name]
     twenty_four_month_traces = [i for i in traces if '24MS' in i.name]
-    
+
     traces = []
     mtom_traces = []
     mtom_traces.extend(mtom_yr_traces)
@@ -385,14 +385,14 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     mtom_traces.extend(cloud_heading)
     if not no_mtom:
         traces.extend(mtom_traces)
-        
+
     traces.extend(twenty_four_month_traces)
     traces.extend(obs_trace)
 
     tier_traces = get_tier_traces(
-        obs_rng[0] - relativedelta(years=1), 
-        obs_rng[0] + relativedelta(years=5), 
-        site_name.lower(), 
+        obs_rng[0] - relativedelta(years=1),
+        obs_rng[0] + relativedelta(years=5),
+        site_name.lower(),
         datatype_name.lower()
     )
     if tier_traces:
@@ -462,7 +462,7 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
 #                'font': {'size': 10}
 #            }
 #        )
-    
+
     layout = go.Layout(
         template='plotly_white',
         title=(

@@ -251,7 +251,7 @@ def get_site_submenu_str(data_dir, site_data, site_id, button_label, meta):
 
     return site_submenu_str
 
-def create_nav(year_str, data_dir, nav_filename=None):   
+def create_nav(year_str, data_dir, nav_filename=None):
     nl = '\n'
     if not nav_filename:
         nav_filename = 'crmms_nav.html'
@@ -324,7 +324,7 @@ def create_nav(year_str, data_dir, nav_filename=None):
                 sites_dd_str
             )
             button_str_list.append(folder_button)
-    
+
     if len(button_str_list) > 6:
         col_one = '\n'.join([i for i in button_str_list[:6] if i])
         col_two = '\n'.join([i for i in button_str_list[6:] if i])

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
+Created on Fri Jul 26 07:55:52 2019
 
-This is a temporary script file.
+@author: buriona
 """
 
 import sys
@@ -31,7 +31,6 @@ from hdb_api.hdb_api import Hdb, HdbTables, HdbTimeSeries
 
 def get_use_datetypes():
     datatypes = [
-#        'Energy',
         'Outflow',
         'Inflow',
         'Pool Elevation',
@@ -75,9 +74,9 @@ def create_log(path='crmms_viz_gen.log'):
     return logger
 
 def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
-                    date_str, watermark=False, no_mtom=True, logger=None, 
+                    date_str, watermark=False, no_mtom=True, logger=None,
                     plotly_js=None):
-    
+
     if not plotly_js:
         plotly_js = get_plotly_js()
     try:
@@ -85,13 +84,13 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
         common_name = 'datatype_metadata.datatype_common_name'
         datatype_name = f"{site_meta[common_name].upper().replace('VOLUME', '')}"
         fig = get_comp_fig(
-            df_slot=df_slot, 
-            df_obs=df_obs, 
-            site_name=site_name, 
-            datatype_name=datatype_name, 
-            units=units, 
-            date_str=date_str, 
-            watermark=watermark, 
+            df_slot=df_slot,
+            df_obs=df_obs,
+            site_name=site_name,
+            datatype_name=datatype_name,
+            units=units,
+            date_str=date_str,
+            watermark=watermark,
             no_mtom=no_mtom
         )
         plotly.offline.plot(
@@ -112,7 +111,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
         with open(chart_filename, 'w') as html_file:
             html_file.write(chart_file_str.replace(r'</head>', flavicon))
         return fig
-    
+
     except Exception as err:
         err_str = (
             f'     Error creating chart - '
@@ -190,7 +189,7 @@ def make_nav(year_str, data_dir, logger=None):
         print_and_log(nav_err, logger)
 
 def make_sitemap(date_str, site_type, df_meta, data_dir, logger=None):
-    
+
     try:
         map_str = create_map(date_str, site_type, df_meta, data_dir)
         print_and_log(map_str, logger)
@@ -230,8 +229,8 @@ def parse_model_ids(model_arg):
             models = {'max': None, 'most': model_ids[0], 'min': None}
         elif len(model_ids) == 3:
             models = {
-                'max': model_ids[0], 
-                'most': model_ids[1], 
+                'max': model_ids[0],
+                'most': model_ids[1],
                 'min': model_ids[2]
             }
         else:
@@ -255,11 +254,11 @@ def get_config(config_name, config_path=None):
     if config:
         pub_name = config.get("name", "UNKNOWN_PUB_DATE")
         models = config.get(
-            "mrids", 
+            "mrids",
             {"max": None, "most": None, "min": None}
         )
         data_filename = config.get(
-            "data", 
+            "data",
             DEFAULT_DATA_PATH
         )
     else:
@@ -312,80 +311,80 @@ def get_csv_path(csv_path):
             )
             sys.exit(1)
     return Path(data_path).resolve()
-    
+
 def get_args():
-    
+
     cli_desc = 'Creates visualization suite for CRMMS results'
     parser = argparse.ArgumentParser(description=cli_desc)
     parser.add_argument(
         "-V", "--version", help="show program version", action="store_true"
     )
     parser.add_argument(
-        "-P", "--provisional", 
-        help="watermarks charts with provisional disclaimer", 
+        "-P", "--provisional",
+        help="watermarks charts with provisional disclaimer",
         action="store_true"
     )
     parser.add_argument(
         "-o", "--output", help="override default output folder", default='local'
     )
     parser.add_argument(
-        "--config_path", 
+        "--config_path",
         help=f'path to crmms_viz.config, used to overide deafault local one ({DEFAULT_CONFIG_PATH})',
         default=DEFAULT_CONFIG_PATH
     )
     parser.add_argument(
-        "-c", "--config", 
+        "-c", "--config",
         help='key to be used in crmms_viz.config, overrides --name, --models, and --data'
     )
     parser.add_argument(
-        "-n", "--name", 
+        "-n", "--name",
         help='override the default current date based folder name should take form m_YYYY, i.e. 7_2020'
     )
     parser.add_argument(
-        "-m", "--models", 
+        "-m", "--models",
         help='override models.config, use form: MAX, MOST, MIN. If only one provided it is assumed to be most.'
     )
     parser.add_argument(
         "-d", "--data", help=f'override default data path ({DEFAULT_DATA_PATH})'
     )
     parser.add_argument(
-        "--no_mtom", help="use/show mtom results in creation of suite", 
-        action="store_true", 
+        "--no_mtom", help="use/show mtom results in creation of suite",
+        action="store_true",
     )
     return parser.parse_args()
 
 if __name__ == '__main__':
-    
+
     import argparse
-    
+
     this_dir = Path().absolute()
     DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
     DEFAULT_CONFIG_PATH = Path(this_dir, 'configs', 'crmms_viz.config')
-    
+
     args = get_args()
-    
+
     if args.version:
         print('crmms_viz_gen.py v1.0')
-    
+
     watermark = False
     if args.provisional:
         watermark = True
-    
+
     if args.config:
         config_dict = get_config(args.config, args.config_path)
         args.name = config_dict['name']
         args.models = config_dict['mrids']
         args.data = config_dict['data']
-    
+
     if args.data:
-        data_path = get_csv_path(args.data)            
+        data_path = get_csv_path(args.data)
     else:
         data_path = Path(DEFAULT_DATA_PATH).resolve()
-        
+
     if args.models:
         if isinstance(args.models, dict):
             models = args.models
-        else:    
+        else:
             models = parse_model_ids(args.models)
     else:
         model_config_path = Path('models.config').resolve()
@@ -393,14 +392,14 @@ if __name__ == '__main__':
             models = json.load(mrid_config)
 
     now_utc = dt.utcnow()
-    
+
     if not args.output == 'local':
         crmms_viz_dir = set_ouput_path(args.output)
         print(crmms_viz_dir)
     else:
         crmms_viz_dir = Path(this_dir, 'crmms_viz').as_posix()
         makedirs(crmms_viz_dir, exist_ok=True)
-    
+
     if args.name:
         curr_month_str = check_suite_name(args.name)
         date_str = get_date_str(curr_month_str)
@@ -409,15 +408,15 @@ if __name__ == '__main__':
         curr_month_str = f'{now_utc.month}_{now_utc.year}'
         date_str = f'{now_utc:%b %Y} CRMMS Modeling Results'
         year_str = f'{now_utc:%Y} CRMMS Modeling Results'
-        
+
     curr_month_dir = Path(crmms_viz_dir, curr_month_str).as_posix()
     makedirs(curr_month_dir, exist_ok=True)
-     
+
     meta_filepath = Path(curr_month_dir, 'meta.csv').as_posix()
     log_dir = Path(this_dir, 'logs')
     makedirs(log_dir, exist_ok=True)
     logger = create_log(Path(log_dir, 'crmms_viz_gen.log'))
-    
+
     col_names = ['run', 'trace', 'obj.slot', 'datetime', 'value', 'unit']
     dtypes = {
         'Run Number': np.int64,
@@ -523,7 +522,7 @@ if __name__ == '__main__':
                             ignore_index=True,
                             sort=False
                         )
-                    
+
             t1_obs = t1 - relativedelta(years=1)
             t2_obs = t1
             df_obs = get_real_data(
@@ -537,38 +536,38 @@ if __name__ == '__main__':
                 df_obs['datetime'] = df_obs.index
                 df_obs['trace'] = 'OBSERVED'
                 df_last_obs = pd.DataFrame(
-                    df_slot['trace'].unique(), 
+                    df_slot['trace'].unique(),
                     columns=['trace']
                 )
                 df_last_obs['value'] = df_obs.iloc[-1]['value']
                 df_last_obs['datetime'] = df_obs.iloc[-1]['datetime']
                 df_slot = pd.concat(
-                    [df_last_obs, df_slot], 
+                    [df_last_obs, df_slot],
                     ignore_index=True,
                     sort=False
                 )
-                
+
         fig = make_comp_chart(
-            df_slot=df_slot, 
-            df_obs=df_obs, 
-            site_meta=df_meta.loc[sdi], 
+            df_slot=df_slot,
+            df_obs=df_obs,
+            site_meta=df_meta.loc[sdi],
             chart_filename=chart_filepath,
             img_filename=img_filename,
             date_str=date_str,
             watermark=watermark,
             no_mtom=args.no_mtom,
-            logger=logger, 
+            logger=logger,
             plotly_js=None
         )
         if not datatype_lower == 'pool elevation':
             figs.append(
                 {
-                    'site_name': display_name, 
-                    'traces': fig['data'], 
+                    'site_name': display_name,
+                    'traces': fig['data'],
                     'datatype': datatype_lower,
                     'chart_dir': chart_dir,
                     'units': units
-                    
+
                 }
             )
         df_table = serial_to_trace(df_slot.copy())

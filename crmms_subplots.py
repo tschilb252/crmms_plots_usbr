@@ -56,9 +56,9 @@ def update_layout(fig, site_name, units, initial_rng, date_str, watermark=False)
                 'xanchor': 'center',
                 'font': {'size': 32, 'color': 'rgba(0,0,0,0.1)'},
                 'textangle': -27
-        }    
+        }
         fig['layout']['annotations'] += (annotation,)
-        
+
     fig.update_layout(
         template='plotly_white',
         title_text=(
@@ -115,13 +115,13 @@ def update_layout(fig, site_name, units, initial_rng, date_str, watermark=False)
     )
     return fig
 
-def create_subplot(data, site, datatypes, units_dict, chart_dir, date_str, 
+def create_subplot(data, site, datatypes, units_dict, chart_dir, date_str,
                    watermark=False):
     order_dict = {'inflow': 1, 'storage': 2, 'outflow': 3}
     units = [units_dict[i] for i in order_dict.keys()]
     fig = make_subplots(
-        rows=3, 
-        cols=1, 
+        rows=3,
+        cols=1,
         subplot_titles=[i.upper() for i in order_dict.keys()],
         shared_xaxes='all',
         vertical_spacing=0.025
@@ -143,7 +143,7 @@ def create_subplot(data, site, datatypes, units_dict, chart_dir, date_str,
                 if trace.name == 'OBSERVED':
                     initial_rng[0] = trace.x[0]
             fig.append_trace(trace, row=order_dict[curr_datatype], col=1)
-            
+
     fig = update_layout(fig, site, units, initial_rng, date_str, watermark)
     save_subplot(chart_dir, fig, site)
 
@@ -165,7 +165,7 @@ def save_subplot(chart_dir, fig, site_name):
     )
     with open(chart_filepath, 'r') as html_file:
         chart_file_str = html_file.read()
-    
+
     with open(chart_filepath, 'w') as html_file:
         html_file.write(chart_file_str.replace(r'</head>', flavicon))
 
@@ -182,7 +182,7 @@ def make_all_subplots(figs, curr_month_dir, date_str, watermark=False):
         create_subplot(
             traces, site, datatypes, units_dict, chart_dir, date_str, watermark
         )
-        
+
 if __name__ == '__main__':
     print('write tests please')
-    
+
