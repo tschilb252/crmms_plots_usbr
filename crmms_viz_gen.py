@@ -524,7 +524,7 @@ if __name__ == '__main__':
                         )
 
             t1_obs = t1 - relativedelta(years=1)
-            t2_obs = t1
+            t2_obs = t1 - relativedelta(months=1)
             df_obs = get_real_data(
                 sdi,
                 hdb_alias,
