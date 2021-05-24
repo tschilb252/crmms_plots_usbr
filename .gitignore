@@ -143,9 +143,9 @@ dmypy.json
 *.log
 
 # data folder
-/data
 !/data/dummy_MTOM_data.csv
 !/data/filter_dates.py
+/data/*
 
 # assets folder
 /assets
