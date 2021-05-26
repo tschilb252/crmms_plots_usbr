@@ -499,7 +499,8 @@ if __name__ == '__main__':
                 t1 = dt(int(s_year), int(s_month), 1)
             except Exception:
                 t1 = min(df_slot['datetime'])
-            t2 = t1 + relativedelta(months=24)
+                
+            t2 = t1 + relativedelta(months=23)
             df_slot = df_slot[df_slot['datetime'] > t1]
             df_slot = df_slot[df_slot['datetime'] < t1 + relativedelta(years=5)]
             hdb_alias = hdb_alias_map[site_name]
@@ -541,6 +542,7 @@ if __name__ == '__main__':
                 )
                 df_last_obs['value'] = df_obs.iloc[-1]['value']
                 df_last_obs['datetime'] = df_obs.iloc[-1]['datetime']
+                print(df_last_obs)
                 df_slot = pd.concat(
                     [df_last_obs, df_slot],
                     ignore_index=True,
