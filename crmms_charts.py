@@ -77,7 +77,7 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
     water_years = df.columns.tolist()
     linetype = 'solid'
     for wy in water_years:
-# TODO: This is for temp removal of next WY for MTOM traces
+# TODO: This is for temp removal of next WY for ESP traces
         # if wy not in show_traces:
         #     df_temp = df[wy]
         #     year = df_temp.index[1].year
@@ -111,7 +111,7 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
                 width,
                 get_hovertemplate(units)
             )
-        if not 'mtom' in f'{wy}'.lower():
+        if not 'esp' in f'{wy}'.lower():
             traces.append(trace)
 
     return traces
@@ -151,7 +151,7 @@ def create_stat_traces(df, datatype_name, units):
         show_trace = visible[col.lower() in show_traces]
         color = color_dict.get(col, 'rgba(0,0,0,0.3)')
         linetype = line_types.get(col, 'dashdot')
-# TODO: This is for temp removal of next WY for MTOM traces
+# TODO: This is for temp removal of next WY for ESP traces
         # df_temp = df[col]
         # year = df_temp.index[1].year
         # df_temp = df_temp[df_temp.index.year == year]
@@ -249,7 +249,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
         ),
         fillcolor='rgba(0,0,0,0.2)',#color.replace(',0.6)', ',0.4)'),
         hoverinfo='skip',
-        legendgroup='MTOM CLOUD',
+        legendgroup='ESP CLOUD',
         connectgaps=True,
         showlegend=showlegend,
         stackgroup='stats',
@@ -345,7 +345,7 @@ def legend_heading(name, legendgroup=None, fillcolor='rgba(0,0,0,0)'):
     ]
 
 def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
-                 watermark=False, no_mtom=True):
+                 watermark=False, no_esp=True):
 
     msg = f'  Working on {site_name} - {datatype_name} CRMMS chart...'
     print(msg)
@@ -369,22 +369,22 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-            'MTOM Stats',
-            legendgroup='MTOM CLOUD',
+            'ESP STATS',
+            legendgroup='ESP CLOUD',
             fillcolor='rgba(0,0,0,0)'
         )
 
-    mtom_yr_traces = [i for i in traces if i.name.isnumeric() or 'MTOM' in i.name]
+    esp_yr_traces = [i for i in traces if i.name.isnumeric() or 'ESP' in i.name]
     twenty_four_month_traces = [i for i in traces if '24MS' in i.name]
 
     traces = []
-    mtom_traces = []
-    mtom_traces.extend(mtom_yr_traces)
-    mtom_traces.extend(legend_heading('MTOM Traces'))
-    mtom_traces.extend(stat_traces)
-    mtom_traces.extend(cloud_heading)
-    if not no_mtom:
-        traces.extend(mtom_traces)
+    esp_traces = []
+    esp_traces.extend(esp_yr_traces)
+    esp_traces.extend(legend_heading('ESP TRACES'))
+    esp_traces.extend(stat_traces)
+    esp_traces.extend(cloud_heading)
+    if not no_esp:
+        traces.extend(esp_traces)
 
     traces.extend(twenty_four_month_traces)
     traces.extend(obs_trace)

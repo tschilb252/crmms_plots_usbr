@@ -1,6 +1,6 @@
-# CRMMS (MTOM/24MS) Visualization Toolset
+# CRMMS (24MS/ESP) Visualization Toolset
 
-Visualization tools for MTOM and 24MS output data
+Visualization tools for 24MS and ESP Ensemble output data
 
 ## Environment setup
 

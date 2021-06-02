@@ -74,7 +74,7 @@ def create_log(path='crmms_viz_gen.log'):
     return logger
 
 def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
-                    date_str, watermark=False, no_mtom=True, logger=None,
+                    date_str, watermark=False, no_esp=True, logger=None,
                     plotly_js=None):
 
     if not plotly_js:
@@ -91,7 +91,7 @@ def make_comp_chart(df_slot, df_obs, site_meta, chart_filename, img_filename,
             units=units,
             date_str=date_str,
             watermark=watermark,
-            no_mtom=no_mtom
+            no_esp=no_esp
         )
         plotly.offline.plot(
             fig,
@@ -202,9 +202,9 @@ def make_sitemap(date_str, site_type, df_meta, data_dir, logger=None):
 def map_traces(trace):
     trace_int = int(trace)
     trace_dict = {
-        1: 'MTOM Max',
-        2: 'MTOM Min',
-        3: 'MTOM Most'
+        1: 'ESP Max',
+        2: 'ESP Min',
+        3: 'ESP Most'
     }
 
     return trace_dict.get(trace_int, str(trace_int - 4 + 1981))
@@ -348,7 +348,7 @@ def get_args():
         "-d", "--data", help=f'override default data path ({DEFAULT_DATA_PATH})'
     )
     parser.add_argument(
-        "--no_mtom", help="use/show mtom results in creation of suite",
+        "--no_esp", help="use/show ensemble results in creation of suite",
         action="store_true",
     )
     return parser.parse_args()
@@ -358,7 +358,7 @@ if __name__ == '__main__':
     import argparse
 
     this_dir = Path().absolute()
-    DEFAULT_DATA_PATH = Path(this_dir, 'data', 'MTOMcsvOutput.csv')
+    DEFAULT_DATA_PATH = Path(this_dir, 'data', 'ESPcsvOutput.csv')
     DEFAULT_CONFIG_PATH = Path(this_dir, 'configs', 'crmms_viz.config')
 
     args = get_args()
@@ -557,7 +557,7 @@ if __name__ == '__main__':
             img_filename=img_filename,
             date_str=date_str,
             watermark=watermark,
-            no_mtom=args.no_mtom,
+            no_esp=args.no_esp,
             logger=logger,
             plotly_js=None
         )
@@ -573,7 +573,7 @@ if __name__ == '__main__':
                 }
             )
         df_table = serial_to_trace(df_slot.copy())
-        if args.no_mtom:
+        if args.no_esp:
             df_table = df_table[[i for i in df_table.columns if '24MS' in i.upper()]]
 
         make_csv(df_table, csv_filepath, logger)

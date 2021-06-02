@@ -17,7 +17,7 @@ DEFAULT_DT_FRMT = '%m-%d-%Y %H:%M:%S'
 
 def get_args():
 
-    cli_desc = 'Filters MTOM results by date, defaulting to only current calendar year'
+    cli_desc = 'Filters ESP results by date, defaulting to only current calendar year'
     parser = argparse.ArgumentParser(description=cli_desc)
     parser.add_argument(
         "-V", "--version", help="show program version", action="store_true"
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             sys.exit(1)
 
     for csv_path in csv_dir.glob(glob_pattern):
-        if 'dummy_MTOM_data' in csv_path.as_posix():
+        if 'dummy_ESP_data' in csv_path.as_posix():
             continue
         print(f'Filtering {csv_path}...')
         df = pd.read_csv(

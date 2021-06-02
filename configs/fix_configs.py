@@ -27,7 +27,7 @@ for config in this_dir.glob('*.config'):
         year = k_arr[-1][2:]
         month_num = int(k_arr[0])
         month = month_name[month_num][:3].lower()
-        data = f'MTOMcsvOutput_{month}{year}.csv'
+        data = f'ESPcsvOutput_{month}{year}.csv'
         mrids = v['mrids']
         name = v['name']
         new_config[k] = {
