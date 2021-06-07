@@ -369,7 +369,7 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-            'ESP STATS',
+            'CRMMS-STATS',
             legendgroup='ESP CLOUD',
             fillcolor='rgba(0,0,0,0)'
         )
@@ -380,7 +380,7 @@ def get_comp_fig(df_slot, df_obs, site_name, datatype_name, units, date_str,
     traces = []
     esp_traces = []
     esp_traces.extend(esp_yr_traces)
-    esp_traces.extend(legend_heading('ESP TRACES'))
+    esp_traces.extend(legend_heading('CRMMS-ESP'))
     esp_traces.extend(stat_traces)
     esp_traces.extend(cloud_heading)
     if not no_esp:
