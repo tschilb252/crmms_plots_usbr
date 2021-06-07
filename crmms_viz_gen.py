@@ -542,7 +542,7 @@ if __name__ == '__main__':
                 )
                 df_last_obs['value'] = df_obs.iloc[-1]['value']
                 df_last_obs['datetime'] = df_obs.iloc[-1]['datetime']
-                print(df_last_obs)
+
                 df_slot = pd.concat(
                     [df_last_obs, df_slot],
                     ignore_index=True,
