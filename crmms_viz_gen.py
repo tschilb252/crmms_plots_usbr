@@ -501,8 +501,8 @@ if __name__ == '__main__':
                 t1 = min(df_slot['datetime'])
                 
             t2 = t1 + relativedelta(months=23)
-            df_slot = df_slot[df_slot['datetime'] > t1]
-            df_slot = df_slot[df_slot['datetime'] < t1 + relativedelta(years=5)]
+            df_slot = df_slot[df_slot['datetime'] >= t1]
+            df_slot = df_slot[df_slot['datetime'] <= t1 + relativedelta(years=5)]
             hdb_alias = hdb_alias_map[site_name]
             display_name = res_display_names()[site_name]
             for model_type, model_id in models.items():
