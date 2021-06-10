@@ -31,6 +31,18 @@ def get_trace_color(wy, colormap=get_colormap()):
         return f'rgba({c[0] * 255}, {c[1] * 255}, {c[2] * 255}, 0.5)'
     return color_dict.get(wy_str, 'black')
 
+def get_trace_width(wy):
+    wy_str = str(wy)
+    width_dict = {
+        '24MS MOST': 4,
+        '24MS MIN': 3,
+        '24MS MAX': 3,
+        'OBSERVED': 4
+    }
+    if wy_str.isdigit():
+        return 2
+    return width_dict.get(wy_str, 2)
+
 def get_hovertemplate(units):
     hover_dict = {
        'acre-ft': "%{text:,.0f} kaf",#"<br>%{x}",
@@ -75,24 +87,16 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
     visible = {True: True, False: 'legendonly'}
     traces = []
     water_years = df.columns.tolist()
-    linetype = 'solid'
+    
     for wy in water_years:
-# TODO: This is for temp removal of next WY for ESP traces
-        # if wy not in show_traces:
-        #     df_temp = df[wy]
-        #     year = df_temp.index[1].year
-        #     df_temp = df_temp[df_temp.index.year == year]
-        # else:
-        #     df_temp = df[wy]
-# TODO: move else statement to only case to revert, delete above, uncomment below
+        linetype = 'dashdot' if str(wy).upper() in ['24MS MIN', '24MS MAX'] else 'solid'
         df_temp = df[wy]
         x_vals = df_temp.index
         y_vals = df_temp.values
         show_trace = visible[wy.upper() in show_traces]
         color = get_trace_color(wy, colormap)
-        width = 2
-        if not str(wy).isdigit():
-            width = 3
+        width = get_trace_width(wy)
+
         if get_chart_type(datatype_name, units) == 'bar':
             trace = bar_trace(
                 x_vals,
@@ -131,18 +135,6 @@ def create_stat_traces(df, datatype_name, units):
     }
     line_types = {'mean': 'dash', '50%': 'dot'}
     traces = []
-#        go.Scatter(
-#            x=[df.index],
-#            y=[df['50%'].values],
-#            name='SHADING',
-#            fill='none',
-#            visible='legendonly',
-#            line=dict(width=0),
-#            hoverinfo='none',
-#            legendgroup='stat_traces',
-#            showlegend=True,
-#        )
-#    ]
 
     df.drop(columns=['count', 'std'], inplace=True)
     cols = df.columns.tolist()
@@ -151,11 +143,6 @@ def create_stat_traces(df, datatype_name, units):
         show_trace = visible[col.lower() in show_traces]
         color = color_dict.get(col, 'rgba(0,0,0,0.3)')
         linetype = line_types.get(col, 'dashdot')
-# TODO: This is for temp removal of next WY for ESP traces
-        # df_temp = df[col]
-        # year = df_temp.index[1].year
-        # df_temp = df_temp[df_temp.index.year == year]
-# TODO: move else statement to only case to revert, delete above, uncomment below
         df_temp = df[col]
         x_vals = df_temp.index
         y_vals = df_temp.values
