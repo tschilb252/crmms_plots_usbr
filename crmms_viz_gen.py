@@ -426,6 +426,8 @@ if __name__ == '__main__':
         'Slot Value': float,
         'Unit': str
     }
+
+    # this is crmms-esp csv data
     df = pd.read_csv(
         data_path,
         dtype=dtypes,
@@ -502,7 +504,7 @@ if __name__ == '__main__':
                 
             t2 = t1 + relativedelta(months=23)
             df_slot = df_slot[df_slot['datetime'] >= t1]
-            df_slot = df_slot[df_slot['datetime'] <= t1 + relativedelta(years=5)]
+            #df_slot = df_slot[df_slot['datetime'] <= t1 + relativedelta(years=5)]
             hdb_alias = hdb_alias_map[site_name]
             display_name = res_display_names()[site_name]
             for model_type, model_id in models.items():
@@ -517,12 +519,18 @@ if __name__ == '__main__':
                     )
                     if not df_model.empty:
                         df_model['datetime'] = df_model.index
+                        last_24ms_date = df_model['datetime'].max()
+                        # trim the crmms-esp data to match the length of the 24ms data
+                        df_slot = df_slot[df_slot['datetime'] <= last_24ms_date]
                         df_model['trace'] = f'24MS {model_type.upper()}'
                         df_slot = df_slot.append(
                             df_model,
                             ignore_index=True,
                             sort=False
                         )
+                    else:
+                        # but if there is no 24ms data, then just trim to 2 years of data
+                        df_slot = df_slot[df_slot['datetime'] <= t1 + relativedelta(years=2)]
 
             t1_obs = t1 - relativedelta(years=1)
             t2_obs = t1 - relativedelta(months=1)
