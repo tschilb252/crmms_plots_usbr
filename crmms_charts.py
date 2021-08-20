@@ -116,7 +116,7 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
 
 
 def create_stat_traces(df, datatype_name, units):
-    show_traces = ["50%"]  # ['10%', '50%', '90%']
+    show_traces = []  # ['10%', '50%', '90%']
     visible = {True: True, False: "legendonly"}
     color_dict = {
         "min": "rgba(255,36,57,0.6)",
@@ -148,14 +148,14 @@ def create_stat_traces(df, datatype_name, units):
             trace_name = f"{exceedance}%"
         chart_type = get_chart_type(datatype_name, units)
         if chart_type == "bar":
-            if col in ["90%", "75%", "50%", "25%", "10%"]:
+            if col in ["90%", "75%", "50%", "25%", "10%", "min", "max"]:
                 stats_trace = stats_shaded_trace(
                     x_vals, y_vals, trace_name, color, chart_type
                 )
                 traces.append(stats_trace)
             trace = bar_trace(x_vals, y_vals, show_trace, trace_name, color)
         else:
-            if col in ["90%", "75%", "50%", "25%", "10%"]:
+            if col in ["90%", "75%", "50%", "25%", "10%", "min", "max"]:
                 stats_trace = stats_shaded_trace(
                     x_vals, y_vals, trace_name, color, chart_type
                 )
@@ -198,7 +198,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
     if chart_type == "bar":
         shape = "vh"
         x, y = bar_stat_shading(x, y)
-    if "90%" in name.upper():
+    if "min" in name.lower():
         fill = "none"
         if chart_type == "bar":
             fill = "tozeroy"
