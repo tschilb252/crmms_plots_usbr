@@ -346,11 +346,15 @@ def get_comp_fig(
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-        "CRMMS-STATS", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
+        "ENSEMBLE MODE", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
     )
 
     esp_yr_traces = [i for i in traces if i.name.isnumeric() or "ESP" in i.name]
     twenty_four_month_traces = [i for i in traces if "24MS" in i.name]
+    ms_heading = legend_heading(
+        "24MS MODE", legendgroup="24MS", fillcolor="rgba(0,0,0,0)"
+    )
+    twenty_four_month_traces.extend(ms_heading)
 
     traces = []
     esp_traces = []
@@ -366,7 +370,7 @@ def get_comp_fig(
 
     tier_traces = get_tier_traces(
         obs_rng[0] - relativedelta(years=1),
-        obs_rng[0] + relativedelta(years=5),
+        obs_rng[0] + relativedelta(years=2),
         site_name.lower(),
         datatype_name.lower(),
     )
