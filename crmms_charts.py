@@ -442,7 +442,7 @@ def get_comp_fig(
 
     layout = go.Layout(
         template="plotly_white",
-        title=(f"<b>{site_name} - {datatype_name} - {date_str}</b>".upper()),
+        title=(f"<b>{date_str} 24-Month Study and Colorado River Mid-term Modeling System (CRMMS) Modeling Results<br>{site_name} - {datatype_name}</b>".upper()),
         autosize=True,
         annotations=annotation,
         images=seal_image,

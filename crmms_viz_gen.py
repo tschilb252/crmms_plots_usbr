@@ -270,18 +270,18 @@ def check_suite_name(suite_name):
 def get_date_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split("_")]
-        date_str = f"{dt(date_arr[1], date_arr[0], 1):%B %Y} Modeling Results"
+        date_str = f"{dt(date_arr[1], date_arr[0], 1):%B %Y}"
     except Exception:
-        date_str = f"{suite_name} Modeling Results"
+        date_str = f"{suite_name}"
     return date_str
 
 
 def get_year_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split("_")]
-        year_str = f"{date_arr[1]} Modeling Results"
+        year_str = f"{date_arr[1]}"
     except Exception:
-        year_str = f"{suite_name} Modeling Results"
+        year_str = f"{suite_name}"
     return year_str
 
 
