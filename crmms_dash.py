@@ -198,6 +198,14 @@ def get_dash_body(site_name, site_id, chart_names):
            <a class="nav-link" data-toggle="tab" href="#help" role="tab">
              <span data-feather="help-circle"></span>  HOW TO...</a>
          </li>
+         <li class="nav-item">
+           <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html#overview_m" role="tab">
+             <span data-feather="help-circle"></span> WHAT IS CRMMS?</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html#future" role="tab">
+             <span data-feather="help-circle"></span> WHAT IS ESP?</a>
+         </li>
         </ul>
       </div>
     </nav>
