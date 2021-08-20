@@ -153,3 +153,6 @@ dmypy.json
 /hdb_api
 hdb_config.json
 *config.json
+
+# pycharm stuff
+/.idea
