@@ -214,7 +214,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
         visible=True,
         fill=fill,
         line=dict(width=0, shape=shape),
-        fillcolor="rgba(0,0,0,0.2)",  # color.replace(',0.6)', ',0.4)'),
+        fillcolor="rgba(100,100,100,.2)",  # color.replace(',0.6)', ',0.4)'),
         hoverinfo="skip",
         legendgroup="ESP CLOUD",
         connectgaps=True,
