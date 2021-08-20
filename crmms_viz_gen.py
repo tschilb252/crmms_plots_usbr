@@ -512,7 +512,7 @@ if __name__ == "__main__":
                         last_24ms_date = df_model['datetime'].max()
                         # trim the crmms-esp data to match the length of the 24ms data
                         df_slot = df_slot[df_slot['datetime'] <= last_24ms_date]
-                        df_model["trace"] = f"24MS {model_type.upper()}"
+                        df_model["trace"] = f"24MS {model_type.upper()} PROB"
 
                         df_slot = df_slot.append(
                             df_model, ignore_index=True, sort=False
