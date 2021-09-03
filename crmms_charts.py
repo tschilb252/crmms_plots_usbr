@@ -14,10 +14,13 @@ from crmms_utils import get_tier_traces, get_bor_seal, serial_to_trace
 
 
 def get_colormap():
+    """
     return branca.colormap.StepColormap(
         ["#001889", "#AB1488", "#D24E71", "#E8853A", "#ECC000"],
         [1980, 1990, 2000, 2010, 2020],
     )
+    """
+    return branca.colormap.LinearColormap(['#FF0000', '#FFE800', '#00E9E9'], [1980, 1999, 2020])
 
 
 def get_trace_color(wy, colormap=get_colormap()):
@@ -30,7 +33,7 @@ def get_trace_color(wy, colormap=get_colormap()):
     }
     if wy_str.isdigit():
         c = colormap.rgba_floats_tuple(int(wy_str))
-        return f"rgba({c[0] * 255}, {c[1] * 255}, {c[2] * 255}, 0.5)"
+        return f"rgba({c[0] * 255}, {c[1] * 255}, {c[2] * 255}, 1)"
     return color_dict.get(wy_str, "black")
 
 
@@ -384,21 +387,21 @@ def get_comp_fig(
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-        "ENSEMBLE MODE", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
+        "CRMMS-ESP Stats", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
     )
 
     esp_yr_traces = [i for i in traces if i.name.isnumeric() or "ESP" in i.name]
     esp_yr_traces_grey = [i for i in traces_grey if i.name.isnumeric() or "ESP" in i.name]
     twenty_four_month_traces = [i for i in traces if "24MS" in i.name]
     ms_heading = legend_heading(
-        "24MS MODE", legendgroup="24MS", fillcolor="rgba(0,0,0,0)"
+        "24-Month Study", legendgroup="24MS", fillcolor="rgba(0,0,0,0)"
     )
     twenty_four_month_traces.extend(ms_heading)
 
     traces = []
     esp_traces = []
     esp_traces.extend(esp_yr_traces)
-    esp_traces.extend(legend_heading("CRMMS-ESP"))
+    esp_traces.extend(legend_heading("Individual Traces"))
     esp_traces.extend(stat_traces)
     esp_traces.extend(cloud_heading)
     esp_traces.extend(esp_yr_traces_grey)

@@ -196,7 +196,7 @@ def get_dash_body(site_name, site_id, chart_names):
          </h6>
          <li class="nav-item">
            <a class="nav-link" data-toggle="tab" href="#help" role="tab">
-             <span data-feather="help-circle"></span>  HOW TO...</a>
+             <span data-feather="help-circle"></span> PLOT DESCRIPTION</a>
          </li>
          <li class="nav-item">
            <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html#overview_m" role="tab">
