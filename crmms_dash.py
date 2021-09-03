@@ -144,9 +144,9 @@ def get_dash_body(site_name, site_id, chart_names):
           <a class="dropdown-item" href="../923/dashboard.html#overview" target="_blank">Lake Havasu</a>
           <a class="dropdown-item" href="../921/dashboard.html#overview" target="_blank">Lake Mead</a>
           <a class="dropdown-item" href="../922/dashboard.html#overview" target="_blank">Lake Mohave</a>
+          <a class="dropdown-item" href="../919/dashboard.html#overview" target="_blank">Lake Powell</a>
           <a class="dropdown-item" href="../914/dashboard.html#overview" target="_blank">Morrow Point</a>
           <a class="dropdown-item" href="../920/dashboard.html#overview" target="_blank">Navajo</a>
-          <a class="dropdown-item" href="../919/dashboard.html#overview" target="_blank">Lake Powell</a>
           <a class="dropdown-item" href="../912/dashboard.html#overview" target="_blank">Taylor Park</a>
           <a class="dropdown-item" href="../933/dashboard.html#overview" target="_blank">Vallecito</a>
         </div>
