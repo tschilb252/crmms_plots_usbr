@@ -1,0 +1,20 @@
+{
+  "uc": {
+    "dialect": "oracle",
+    "driver": "cx_oracle",
+    "username": "app_user",
+    "psswrd": "app_user",
+    "port": "1521",
+    "host": "uchdb2.bor.doi.net",
+    "database": "uchdb2"
+  },
+  "lc": {
+    "dialect": "oracle",
+    "driver": "cx_oracle",
+    "username": "app_user",
+    "psswrd": "app_user",
+    "port": "1521",
+    "host": "lchdb.bor.doi.net",
+    "database": "lchdb"
+  }
+}
