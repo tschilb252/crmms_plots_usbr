@@ -151,3 +151,6 @@ dmypy.json
 
 # pycharm stuff
 /.idea
+
+# ignore user HDB input
+*config.json
