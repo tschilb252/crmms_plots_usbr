@@ -149,10 +149,5 @@ dmypy.json
 # assets folder
 /assets
 
-# HDB config file (shouldn't be present anyways)
-/hdb_api
-hdb_config.json
-*config.json
-
 # pycharm stuff
 /.idea
