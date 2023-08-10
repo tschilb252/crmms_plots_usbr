@@ -38,6 +38,8 @@ def get_use_datetypes():
         "Storage",
         "Outflow_cfs",
         "Inflow_cfs",
+        "Total Energy",
+        "Net Energy"
     ]
 
     return [x.lower() for x in datatypes]
@@ -433,9 +435,11 @@ if __name__ == "__main__":
 
     sids_map = get_crmms_hdb_site_map()
     dids_map = get_crmms_hdb_datatype_map()
-    sids = list(set([sids_map[x] for x in df["obj"].unique() if x in sids_map.keys()]))
-    dids = list(set([dids_map[x] for x in df["slot"].unique() if x in dids_map.keys()]))
+    sids = list(set([sids_map[x] for x in df["obj"].unique() if x in sids_map.keys()])) + [971, 970, 972, 973] #added site_ids for Energy ZL 2023-07
+    dids = list([dids_map[x] for x in dids_map.keys()]) #list(set([dids_map[x] for x in df["slot"].unique() if x in dids_map.keys()]))
+    print(sids, dids)
     df["trace"] = df["trace"].apply(lambda x: map_traces(x))
+
     df_meta = get_meta(sids, dids)
     make_csv(df_meta, meta_filepath, logger)
     use_datatypes = get_use_datetypes()
@@ -447,10 +451,27 @@ if __name__ == "__main__":
     for slot in list(df["obj.slot"].unique()):
         site_name, datatype_name = slot.split(".")
         units = df[df["obj.slot"] == slot]["unit"].iloc[0]
+        # added if block to remap HDB site names for energy to ESPcsvOutput RW names
+        if site_name == "Powell" and datatype_name == "Energy":
+            site_name = "GlenCanyon"
+            datatype_name = "Total Energy"
+        elif site_name == "Mead" and datatype_name == "Energy":
+            site_name = "Hoover"
+            datatype_name = "Total Energy"
+        elif site_name == "Mohave" and datatype_name == "Energy":
+            site_name = "Davis"
+            datatype_name = "Net Energy"
+        elif site_name == "Havasu" and datatype_name == "Energy":
+            site_name = "Parker"
+            datatype_name = "Net Energy"
+        elif datatype_name == "Energy":
+            continue
+        ####
         if datatype_name.lower() not in use_datatypes:
             continue
         if site_name.lower() not in [x.lower() for x in hdb_alias_map.keys()]:
             continue
+        print(site_name, datatype_name)
         sid = str(sids_map[site_name])
         did = str(dids_map[datatype_name])
         sdi = None
@@ -461,6 +482,8 @@ if __name__ == "__main__":
             ]["site_datatype_id"]
             if not sdi_series.empty:
                 sdi = str(sdi_series.iloc[0])
+        if datatype_name == "Energy":
+            print(slot, site_name, datatype_name, sid, did, sdi, sdi_series)
         chart_dir = Path(curr_month_dir, f"{sid}", "charts")
         makedirs(chart_dir, exist_ok=True)
         csv_dir = Path(curr_month_dir, f"{sid}", "csv")
@@ -513,7 +536,11 @@ if __name__ == "__main__":
                         # trim the crmms-esp data to match the length of the 24ms data
                         df_slot = df_slot[df_slot['datetime'] <= last_24ms_date]
                         df_model["trace"] = f"24MS {model_type.upper()} PROB"
-
+                        # added 2023-07 ZL for Energy
+                        if "Energy" in datatype_name:
+                            # Units MWH => GWH
+                            df_model["value"] /= 1000
+                        ####
                         df_slot = df_slot.append(
                             df_model, ignore_index=True, sort=False
                         )
@@ -524,7 +551,13 @@ if __name__ == "__main__":
             t1_obs = t1 - relativedelta(years=1)
             t2_obs = t1 - relativedelta(months=1)
             df_obs = get_real_data(sdi, hdb_alias, "value", t1_obs, t2_obs)
+
             if not df_obs.empty:
+                # added 2023-07 ZL for Energy
+                if "Energy" in datatype_name:
+                    # Units MWH => GWH
+                    df_obs["value"] /= 1000
+                ####
                 df_obs["datetime"] = df_obs.index
                 df_obs["trace"] = "OBSERVED"
                 df_last_obs = pd.DataFrame(df_slot["trace"].unique(), columns=["trace"])
@@ -534,35 +567,39 @@ if __name__ == "__main__":
                 df_slot = pd.concat(
                     [df_last_obs, df_slot], ignore_index=True, sort=False
                 )
-
-        fig = make_comp_chart(
-            df_slot=df_slot,
-            df_obs=df_obs,
-            site_meta=df_meta.loc[sdi],
-            chart_filename=chart_filepath,
-            img_filename=img_filename,
-            date_str=date_str,
-            watermark=watermark,
-            no_esp=args.no_esp,
-            logger=logger,
-            plotly_js=None,
-        )
-        if not datatype_lower == "pool elevation":
-            figs.append(
-                {
-                    "site_name": display_name,
-                    "traces": fig["data"],
-                    "datatype": datatype_lower,
-                    "chart_dir": chart_dir,
-                    "units": units,
-                }
+            # if datatype_name == "Energy":
+            #     print(df_slot)
+            #     print(df_obs)
+            #     print(df_slot["trace"].unique())
+            #     input()
+            fig = make_comp_chart(
+                df_slot=df_slot,
+                df_obs=df_obs,
+                site_meta=df_meta.loc[sdi],
+                chart_filename=chart_filepath,
+                img_filename=img_filename,
+                date_str=date_str,
+                watermark=watermark,
+                no_esp=args.no_esp,
+                logger=logger,
+                plotly_js=None,
             )
-        df_table = serial_to_trace(df_slot.copy())
-        if args.no_esp:
-            df_table = df_table[[i for i in df_table.columns if "24MS" in i.upper()]]
+            if not datatype_lower == "pool elevation" and not datatype_lower == "total energy" and not datatype_lower == "net energy": # added 2023-07 ZL for Energy
+                figs.append(
+                    {
+                        "site_name": display_name,
+                        "traces": fig["data"],
+                        "datatype": datatype_lower,
+                        "chart_dir": chart_dir,
+                        "units": units,
+                    }
+                )
+            df_table = serial_to_trace(df_slot.copy())
+            if args.no_esp:
+                df_table = df_table[[i for i in df_table.columns if "24MS" in i.upper()]]
 
-        make_csv(df_table, csv_filepath, logger)
-        make_json(df_table, json_filepath, logger)
+            make_csv(df_table, csv_filepath, logger)
+            make_json(df_table, json_filepath, logger)
     print("Making subplots...")
     make_all_subplots(figs, curr_month_dir, date_str, watermark)
     print("Making site map...")

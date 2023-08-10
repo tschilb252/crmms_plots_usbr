@@ -119,9 +119,24 @@ def create_map(date_str, site_type, meta, data_dir):
     gis_dir = path.join(this_dir, "gis")
     huc2_geojson_path = path.join(gis_dir, "HUC2.geojson")
     meta = meta.drop_duplicates(subset="site_id")
+    # added 2023-07 ZL for Energy lat/lon checks
+    print(meta.index)
+    if "2070" in meta["site_datatype_id"].tolist():
+        meta.loc['2070', "site_metadata.lat"] = 36.0055
+        meta.loc['2070', "site_metadata.longi"] = -114.4416
+    if "2071" in meta["site_datatype_id"].tolist():
+        meta.loc['2071', "site_metadata.lat"] = 35.1143
+        meta.loc['2071', "site_metadata.longi"] = -114.3349
+    if "2072" in meta["site_datatype_id"].tolist():
+        meta.loc['2072', "site_metadata.lat"] = 34.1812
+        meta.loc['2072', "site_metadata.longi"] = -114.0823   
     meta["site_metadata.lat"] = clean_coords(meta["site_metadata.lat"])
     meta["site_metadata.longi"] = clean_coords(meta["site_metadata.longi"], True)
 
+    print(meta["site_metadata.lat"].values)
+    print(meta["site_metadata.longi"].values)
+    #input()
+    ####
     sitetype_dir = path.join(data_dir, site_type)
     map_filename = "site_map.html"
     map_path = path.join(sitetype_dir, map_filename)

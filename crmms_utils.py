@@ -89,6 +89,12 @@ def get_crmms_hdb_site_map():
         "Crystal": 915,
         "FlamingGorge": 917,
         "Fontenelle": 916,
+        # added ZL 2023-07 for Energy
+        "GlenCanyon": 970,
+        "Hoover": 971,
+        "Davis": 972,
+        "Parker": 973,
+        ####
         "Havasu": 923,
         "Mead": 921,
         "Mohave": 922,
@@ -106,6 +112,12 @@ def res_display_names():
         "Crystal": "Crystal",
         "FlamingGorge": "Flaming Gorge",
         "Fontenelle": "Fontenelle",
+        # added ZL 2023-07 for Energy
+        "GlenCanyon": "Glen Canyon",
+        "Hoover": "Hoover",
+        "Davis": "Davis",
+        "Parker": "Parker",
+        ####
         "Havasu": "Lake Havasu",
         "Mead": "Lake Mead",
         "Mohave": "Lake Mohave",
@@ -123,6 +135,12 @@ def get_hdb_alias_map():
         "Crystal": "uc",
         "FlamingGorge": "uc",
         "Fontenelle": "uc",
+        # added ZL 2023-07 for  Energy
+        "GlenCanyon": "uc",
+        "Hoover": "lc",
+        "Davis": "lc",
+        "Parker": "lc",
+        ####
         "Havasu": "lc",
         "Mead": "lc",
         "Mohave": "lc",
@@ -137,7 +155,8 @@ def get_hdb_alias_map():
 def get_crmms_hdb_datatype_map():
     return {
         "Bank Storage": 15,
-        "Energy": None,
+        "Total Energy": 74, # added ZL 2023-07 for Energy
+        "Net Energy": 104, # added ZL 2023-07 for Energy
         "Evaporation": 25,
         "Inflow": 30,
         "Inflow_cfs": 29,
@@ -160,6 +179,12 @@ def map_sids(site_name):
         "Crystal": 915,
         "FlamingGorge": 917,
         "Fontenelle": 916,
+        # added ZL 2023-07 for Energy
+        "GlenCanyon": 970,
+        "Hoover": 971,
+        "Davis": 972,
+        "Parker": 973,
+        ####
         "Havasu": 923,
         "Mead": 921,
         "Mohave": 922,
@@ -184,6 +209,10 @@ def map_dids(datatype_name):
         "Storage": 17,
         "Evaporation": 25,
         "Surface Area": 89,
+        # added ZL 2023-07 for Energy
+        "Total Energy": 74,
+        "Net Energy": 104
+        ####
     }
 
     return dids_dict.get(datatype_name, np.nan)
@@ -401,9 +430,11 @@ def add_huc_layer(
 def clean_coords(coord_series, force_neg=False):
 
     coord_series = coord_series.apply(pd.to_numeric, errors="ignore", downcast="float")
+    # print(coord_series)
     if not coord_series.apply(type).eq(str).any():
         if force_neg:
             return -coord_series.abs()
+        print("clean coord early return")
         return coord_series
     results = []
     for idx, coord in coord_series.iteritems():
@@ -417,10 +448,14 @@ def clean_coords(coord_series, force_neg=False):
                 coord_digits.append(float(coord_digit))
             dec = None
             coord_dec = 0
+            #print(coord_digits)
             for i in reversed(range(0, len(coord_digits))):
+                #print(i, dec)
                 if dec:
                     coord_dec = abs(coord_digits[i]) + dec
                 dec = coord_digits[i] / 60
+                #print(i, dec)
+            #input()
             if str(coord)[0] == "-":
                 coord_dec = -1 * coord_dec
             results.append(coord_dec)

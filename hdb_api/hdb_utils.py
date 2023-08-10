@@ -62,6 +62,10 @@ def is_leap_year(year):
     return False
 
 datatype_labels = {
+    # added ZL Energy 2023-07
+    74: 'TOTAL ENERGY',
+    104: 'NET ENERGY',
+    ###
     17: 'STORAGE',
     49: 'POOL ELEVATION',
     30: 'INFLOW VOLUME',
@@ -99,6 +103,10 @@ datatype_labels.update(datatype_labels_strs)
 datatype_ids = {v: k for k, v in datatype_labels.items()}
 
 datatype_units = {
+    # added ZL 2023-07
+    74: 'MWH',
+    104: 'MWH',
+    ###
     19: 'cfs',
     20: 'acre-ft',
     17: 'acre-ft',
@@ -136,6 +144,10 @@ for k, v in datatype_units.items():
 datatype_units.update(datatype_units_strs)    
 
 datatype_common_names = {
+    # added ZL 2023-07
+    74: 'total energy',
+    104: 'net energy',
+    ####
     19: 'flow',
     20: 'flow volume',
     17: 'storage',
