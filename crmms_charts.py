@@ -47,6 +47,7 @@ def get_trace_width(wy):
 
 def get_hovertemplate(units):
     hover_dict = {
+        "GWH": "%{y:,.0f} GWH",  # "<br>%{x}",
         "acre-ft": "%{text:,.0f} kaf",  # "<br>%{x}",
         "acre-ft/month": "%{text:,.0f} kaf/month",  # <br>%{x}",
         "ft": "%{y:,.1f}'",  # <br>%{x}"
