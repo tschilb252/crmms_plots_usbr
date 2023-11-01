@@ -191,11 +191,20 @@ def make_sitemap(date_str, site_type, df_meta, data_dir, logger=None):
         print_and_log(map_err, logger)
 
 
-def map_traces(trace):
+def map_traces(trace, datestring):
+    # in october 2021, CRMMS-ESP transitioned from using 
+    # the 1981 - 2010 to 1991-2020 period for ESP traces
     trace_int = int(trace)
     trace_dict = {1: "ESP Max", 2: "ESP Min", 3: "ESP Most"}
-
-    return trace_dict.get(trace_int, str(trace_int - 4 + 1991))
+    datearray = datestring.split('_')
+    if int(datearray[1]) > 2021:
+      return trace_dict.get(trace_int, str(trace_int - 4 + 1991))
+    elif int(datearray[1]) < 2021:
+      return trace_dict.get(trace_int, str(trace_int - 4 + 1981))
+    elif int(datearray[0]) < 10:
+      return trace_dict.get(trace_int, str(trace_int - 4 + 1981))
+    else:    
+      return trace_dict.get(trace_int, str(trace_int - 4 + 1991))
 
 
 def af_to_cfs(df, date_col="datetime", val_col="value"):
@@ -438,7 +447,7 @@ if __name__ == "__main__":
     sids = list(set([sids_map[x] for x in df["obj"].unique() if x in sids_map.keys()])) + [971, 970, 972, 973] #added site_ids for Energy ZL 2023-07
     dids = list([dids_map[x] for x in dids_map.keys()]) #list(set([dids_map[x] for x in df["slot"].unique() if x in dids_map.keys()]))
     print(sids, dids)
-    df["trace"] = df["trace"].apply(lambda x: map_traces(x))
+    df["trace"] = df["trace"].apply(lambda x: map_traces(x, curr_month_str))
 
     df_meta = get_meta(sids, dids)
     make_csv(df_meta, meta_filepath, logger)
