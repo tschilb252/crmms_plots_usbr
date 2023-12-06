@@ -153,4 +153,4 @@ dmypy.json
 /.idea
 
 # ignore user HDB input
-*config.json
+/hdb_api/*config.json
